@@ -28,3 +28,38 @@
     font-size: 1.5em;
     font-weight: bold;
 }
+
+/* added css styles */
+.map-container {
+  width: 1px;
+  border: gray
+}
+
+.map-container path.country {
+  fill: gray;
+}
+
+.map-container > .tooltip {
+  background-color: lightblue;
+  position: abs;
+  min-width: 50px;
+  pointer-events: none;
+  border: 1px black;
+  padding: 2px;
+  border-radius: 3px;
+  /* box-shadow:  */
+}
+
+.map-container > .tooltip .number {
+  font-family: monospace;
+  text-align: right;
+  font-size: 1.2em;
+  font-weight: 300;
+  color: purple;
+}
+
+.map-container > .tooltip p {
+  margin: 2px;
+  color: white;
+  /* display: */
+}
