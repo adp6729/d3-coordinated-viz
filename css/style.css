@@ -50,7 +50,7 @@
   border: 2px black;
   padding: 2px;
   border-radius: 3px;
-  /* box-shadow:  */
+  box-shadow: 2px 2px 2px black;
 }
 
 .map-container > .map-tooltip .number {
