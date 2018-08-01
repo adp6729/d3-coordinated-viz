@@ -90,9 +90,10 @@ function createMap(africaArray) {
        tooltip.style('opacity', 0.7)
        tooltip.style('left', d3.mouse(this)[0] + 'px')
        tooltip.style('top', d3.mouse(this)[1] + 'px')
-       console.log(d.properties.CorruptionPerceptionIndex2015 * 100)
+       const cPFormat = d3.format(".0%")
        tooltip.html(`
-          <p>${d.properties.ADMIN}</p>&nbsp;<p class="number">${100*d.properties.CorruptionPerceptionIndex2015}%</p>
+          <p>${d.properties.ADMIN}</p>&nbsp;
+          <p class="number">${cPformat(d.properties.CorruptionPerceptionIndex2015)}%</p>
        `) // modify above
        
        d3.select(this)
@@ -103,6 +104,8 @@ function createMap(africaArray) {
  
  function hideToolTip(d) {
     tooltip.style('opacity', 0)
+    d3.select(this)
+          .style('stroke', 'white')
  }
 
 // Lab Module 2-1, All Lessons
