@@ -3,21 +3,22 @@
 
 // Corruption and Governance map of Africa
 const container = d3.select(".map-container")
-const tooltip = d3.select(".map-container .tooltip")
 
-const width = parseInt(container.style("width")/2)
+const tooltip = d3.select(".map-container .map-tooltip")
+
+const width = parseInt(container.style("width"))
 const height = width/0.8
 
 const projection = d3.geoMercator() // projection used for the mercator projection
-   .scale(width / 2.2 / Math.PI)
-   .translate([width / 2, height / 1.5])
+   .scale(width/1.5)
+   .translate([width / 4, height / 1.9])
 
 const pathGenerator = d3.geoPath()
-   .projection(null)
+   .projection(projection)
 
 var svg = d3.select(".map-container").append("svg")
-    .attr("width", 960)
-    .attr("height", 800)
+    .attr("width", width)
+    .attr("height", height)
 
 const countriesG = svg.append('g')
     .attr('class', 'countries')
@@ -25,7 +26,8 @@ const countriesG = svg.append('g')
 const colorScale = d3.scaleLinear()
     .range(['red', 'pink'])
 Promise.all([
-    d3.json('data/africa.topo.json'),
+    d3.json('data/worldMap50mSimplified.json', function(error, world) {
+        if (error) return console.error(error)}),
     d3.csv('data/africaCorruptionData.csv', d => { 
        d.CorruptionPerceptionIndex2015 = +d.CorruptionPerceptionIndex2015
        d.CorruptionControl2015 = +d.CorruptionControl2015
@@ -40,55 +42,58 @@ Promise.all([
     .then(createMap)
 
 function processData(results) {
-    const geoJson = results[0]
+    const geoJson = topojson.feature(results[0],results[0].objects.ne_50m_admin_0_countries_lakes)
     const cData = results[1]
-    console.log(geoJson)
+    var africaArray = []
     for (const feature of geoJson.features) {
-        // feature.properties.newDataField = 0 // initialize new data field to 0 or other
-        for (const stat of cData) {
-            if (feature.properties.admin0_a3 == stat.ISO3) {
-                feature.properties.CorruptionPerceptionIndex2015 = stat.CorruptionPerceptionIndex2015
-                feature.properties.CorruptionControl2015 = stat.CorruptionControl2015
-                feature.properties.IbrahimIndex2015 = stat.IbrahimIndex2015
-                feature.properties.EaseOfDoingBusinessRank2015 = stat.EaseOfDoingBusinessRank2015
-                feature.properties.NAIPerAdultDollars2017 = stat.NAIPerAdultDollars2017
-                feature.properties.GDPPerAdultDollars2017 = stat.GDPPerAdultDollars2017
-                break
+        if (feature.properties.CONTINENT == "Africa" || feature.properties.ISO_A2 == ('SC' || 'MU')) {
+            for (const stat of cData) {
+                if (feature.properties.ISO_A2 == stat.ISO2) {
+                    feature.properties.CorruptionPerceptionIndex2015 = stat.CorruptionPerceptionIndex2015
+                    feature.properties.CorruptionControl2015 = stat.CorruptionControl2015
+                    feature.properties.IbrahimIndex2015 = stat.IbrahimIndex2015
+                    feature.properties.EaseOfDoingBusinessRank2015 = stat.EaseOfDoingBusinessRank2015
+                    feature.properties.NAIPerAdultDollars2017 = stat.NAIPerAdultDollars2017
+                    feature.properties.GDPPerAdultDollars2017 = stat.GDPPerAdultDollars2017             
+                    break
+                }
             }
+            africaArray.push(feature)
         }
     }
-
     colorScale.domain(d3.extent(cData, d=>d.CorruptionPerceptionIndex2015))
-
     window.colorScale = colorScale // globalize colorScale
-
-    return results[0]
+    return africaArray
 }
 
-function createMap(geoJson) {
+function createMap(africaArray) {
     countriesG
        .selectAll('path')
-       .data(geoJson.features)
+       .data(africaArray)
        .enter()
           .append('path')
-             .attr('class', d => 'country ' + d.properties.admin0_a3)
+             .attr('class', d => 'country ' + d.properties.SOV_A3)
              .attr('d', d => pathGenerator(d))
              .style('fill', d => {
                 if (d.properties.CorruptionPerceptionIndex2015) { // modify
                    return colorScale(d.properties.CorruptionPerceptionIndex2015) // modify
                 }
              })
+             .on("mousemove", moveToolTip)
+             .on("mouseout", hideToolTip)
  }
 
  function moveToolTip(d) {
-    // d3.select(this).style('fill', 'red')
+    d3.select(this).style('stroke', '5px')
+    console.log(d.properties.CorruptionPerceptionIndex2015)
     if (d.properties.CorruptionPerceptionIndex2015) {  // modify
-       tooltip.style('opacity', 1)
-       tooltip.style('left', d3.mouse(this)[0])
-       tooltip.style('top', d3.mouse(this)[1])
+       tooltip.style('opacity', 0.7)
+       console.log(d3.mouse(this))
+       tooltip.style('left', d3.mouse(this)[0] + 'px')
+       tooltip.style('top', d3.mouse(this)[1] + 'px')
+       console.log(d.properties.CorruptionPerceptionIndex2015 * 100)
        tooltip.html(`
-          <p>${d.properties.admin}</p>
-          &nbsp;<p class="number">${d.properties.CorruptionPerceptionIndex2015}</p>
+          <p>${d.properties.ADMIN}</p>&nbsp;<p class="number">${100*d.properties.CorruptionPerceptionIndex2015}%</p>
        `) // modify above
     }
  }

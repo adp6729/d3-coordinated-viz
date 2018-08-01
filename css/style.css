@@ -1,27 +1,27 @@
 /* Stylesheet by Andrew Pittman, 2018 */
 
 .countries {
-    fill: #222;
-    stroke: #fff;
-  }
-  
-  .countries :hover {
-    fill: #973232;
-    stroke: rgb(0, 0, 0);
-  }
+  fill: #222;
+  stroke: #fff;
+}
 
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: black;
-    stroke-width: 1px;
-    shape-rendering: crispEdges;
-  }
+.countries :hover {
+  fill: #973232;
+  stroke: rgb(0, 0, 0);
+}
 
-  .axis text {
-    font-family: sans-serif;
-    font-size: 0.9em;
-  }
+.axis path,
+.axis line {
+  fill: none;
+  stroke: black;
+  stroke-width: 5px;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font-family: sans-serif;
+  font-size: 0.9em;
+}
 
 .title {
     font-family: sans-serif;
@@ -31,7 +31,8 @@
 
 /* added css styles */
 .map-container {
-  width: 1px;
+  width: 50%;
+  height: auto;
   border: gray
 }
 
@@ -39,27 +40,29 @@
   fill: gray;
 }
 
-.map-container > .tooltip {
-  background-color: lightblue;
-  position: abs;
+.map-container > .map-tooltip {
+  background-color: rgb(0, 0, 0);
+  opacity: 0;
+  z-index: 999;
+  position: absolute;
   min-width: 50px;
   pointer-events: none;
-  border: 1px black;
+  border: 2px black;
   padding: 2px;
   border-radius: 3px;
   /* box-shadow:  */
 }
 
-.map-container > .tooltip .number {
+.map-container > .map-tooltip .number {
   font-family: monospace;
   text-align: right;
   font-size: 1.2em;
-  font-weight: 300;
-  color: purple;
+  font-weight: 600;
+  color: rgb(255, 0, 0);
 }
 
-.map-container > .tooltip p {
+.map-container > .map-tooltip p {
   margin: 2px;
   color: white;
-  /* display: */
+  display: inline;
 }
