@@ -11,7 +11,7 @@ const height = width/0.8
 
 const projection = d3.geoMercator() // projection used for the mercator projection
    .scale(width/1.5)
-   .translate([width / 4, height / 2.1])
+   .translate([width / 4, height / 2.2])
 
 const pathGenerator = d3.geoPath()
    .projection(projection)
@@ -88,8 +88,8 @@ function createMap(africaArray) {
  function moveToolTip(d) {
     if (d.properties.CorruptionPerceptionIndex2015) {  // modify
        tooltip.style('opacity', 0.7)
-       tooltip.style('left', d3.mouse(this)[0] + 'px')
-       tooltip.style('top', d3.mouse(this)[1] + 'px')
+       tooltip.style('left', d3.mouse(this)[0] + 10 + 'px')
+       tooltip.style('top', d3.mouse(this)[1] + 100 + 'px')
        const cPFormat = d3.format(".0%")
        tooltip.html(`
           <p>${d.properties.ADMIN}</p>&nbsp;
