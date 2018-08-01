@@ -83,18 +83,21 @@ function createMap(africaArray) {
              .on("mouseout", hideToolTip)
  }
 
+
+
  function moveToolTip(d) {
-    d3.select(this).style('stroke', '5px')
-    console.log(d.properties.CorruptionPerceptionIndex2015)
     if (d.properties.CorruptionPerceptionIndex2015) {  // modify
        tooltip.style('opacity', 0.7)
-       console.log(d3.mouse(this))
        tooltip.style('left', d3.mouse(this)[0] + 'px')
        tooltip.style('top', d3.mouse(this)[1] + 'px')
        console.log(d.properties.CorruptionPerceptionIndex2015 * 100)
        tooltip.html(`
           <p>${d.properties.ADMIN}</p>&nbsp;<p class="number">${100*d.properties.CorruptionPerceptionIndex2015}%</p>
        `) // modify above
+       
+       d3.select(this)
+          .style('stroke', 'black')
+          .raise()
     }
  }
  
