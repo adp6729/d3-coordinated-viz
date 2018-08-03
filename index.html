@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width">
+		<link rel="stylesheet" href="lib/bootstrap.min.css">
 		<link rel="shortcut icon" type="image/png" href="img/africaFavicon2.png">
 		<title></title>
 
@@ -11,20 +12,148 @@
 
 	</head>
 
-	<body>
-		<!--put your initial page content here-->
-		<h1>Africa Topojson</h1>
-		
-		<div class="map-container">
-			<div class="map-tooltip">
+	<body class="text-center body">
+		<nav class="navbar navbar-expand-xl navbar-dark bg-dark">
+			<a class="navbar-brand" href="#">
+				<img src="img/africaFavicon2.png" width="30" height="30" class="d-inline-block align-top" alt="">
+				African Corruption
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavDropdown">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+				<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Indicators
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<a class="dropdown-item" href="#">Indicator 1</a>
+						<a class="dropdown-item" href="#">Indicator 2</a>
+						<a class="dropdown-item" href="#">Indicator 3</a>
+						<a class="dropdown-item" href="#">Indicator 4</a>
+						<a class="dropdown-item" href="#">Indicator 5</a>
+						<a class="dropdown-item" href="#">Indicator 6</a>
+					</div>
+				</li>
+			</ul>
+			<span class="navbar-text">
+				GEOG 575 D3 Lab
+			</span>
+			</div>
+		</nav>
+		<div class="main-section">
+			<div class="map-container col-lg-6 col-xs-12">
+				<div class="map-tooltip">
 
+				</div>
+			</div>
+			<div class="bar-chart col-lg-6 col-xs-12">
+				
 			</div>
 		</div>
+		
+		<nav class="navbar fixed-bottom navbar-dark bg-dark">
+			<a class="navbar-text text-md-right" style="color: white">© 2018 Copyright:
+				<a href="https://www.linkedin.com/in/andrew-pittman-a1618922/">
+					<strong> Andrew Pittman</strong>
+				</a>
+			</a>
+			<!-- <div class="container text-center text-md-left">		
+				<div class="row d-flex align-items-center">
+		
+					<div class="col-md-7 col-lg-8">
+						<p class="text-center text-md-left">© 2018 Copyright:
+						<a href="https://www.linkedin.com/in/andrew-pittman-a1618922/">
+							<strong> Andrew Pittman</strong>
+						</a>
+						</p>		
+					</div>
+
+					<div class="col-md-5 col-lg-4 ml-lg-0">
+			
+						<div class="text-center text-md-right">
+						<ul class="list-unstyled list-inline">
+							<li class="list-inline-item">
+							<a class="btn-floating btn-sm rgba-white-slight mx-1">
+								<i class="fa fa-facebook"></i>
+							</a>
+							</li>
+							<li class="list-inline-item">
+							<a class="btn-floating btn-sm rgba-white-slight mx-1">
+								<i class="fa fa-twitter"></i>
+							</a>
+							</li>
+							<li class="list-inline-item">
+							<a class="btn-floating btn-sm rgba-white-slight mx-1">
+								<i class="fa fa-google-plus"></i>
+							</a>
+							</li>
+							<li class="list-inline-item">
+							<a class="btn-floating btn-sm rgba-white-slight mx-1">
+								<i class="fa fa-linkedin"></i>
+							</a>
+							</li>
+						</ul>
+						</div>			
+					</div>
+				</div>
+			</div> -->
+		</nav>
+<!-- 
+		<footer class="page-footer font-small mdb-color pt-4">
+			<div class="container text-center text-md-left">		
+				<div class="row d-flex align-items-center">
+		
+					<div class="col-md-7 col-lg-8">
+						<p class="text-center text-md-left">© 2018 Copyright:
+						<a href="https://www.linkedin.com/in/andrew-pittman-a1618922/">
+							<strong> Andrew Pittman</strong>
+						</a>
+						</p>		
+					</div>
+
+					<div class="col-md-5 col-lg-4 ml-lg-0">
+			
+						<div class="text-center text-md-right">
+						<ul class="list-unstyled list-inline">
+							<li class="list-inline-item">
+							<a class="btn-floating btn-sm rgba-white-slight mx-1">
+								<i class="fa fa-facebook"></i>
+							</a>
+							</li>
+							<li class="list-inline-item">
+							<a class="btn-floating btn-sm rgba-white-slight mx-1">
+								<i class="fa fa-twitter"></i>
+							</a>
+							</li>
+							<li class="list-inline-item">
+							<a class="btn-floating btn-sm rgba-white-slight mx-1">
+								<i class="fa fa-google-plus"></i>
+							</a>
+							</li>
+							<li class="list-inline-item">
+							<a class="btn-floating btn-sm rgba-white-slight mx-1">
+								<i class="fa fa-linkedin"></i>
+							</a>
+							</li>
+						</ul>
+						</div>			
+					</div>
+				</div>
+			</div>
+		</footer> -->
 
 		<!-- external script links -->
 		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script> -->
 		<script type="text/javascript" src="lib/d3.js"></script>
 		<script type="text/javascript" src="lib/topojson.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="lib/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
 		
 	</body>

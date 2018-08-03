@@ -2,29 +2,55 @@
 // author: Andrew Pittman
 
 // Corruption and Governance map of Africa
+const body = d3.select("body")
 const container = d3.select(".map-container")
 
 const tooltip = d3.select(".map-container .map-tooltip")
 
-const width = parseInt(container.style("width"))
-const height = width/0.8
+const width = parseInt(body.style("width"))/2
+const height = width/0.88
 
 const projection = d3.geoMercator() // projection used for the mercator projection
-   .scale(width/1.5)
-   .translate([width / 4, height / 2.2])
+    .center([17, 1])
+    .scale(width/1.22)
+    .translate([width / 2, height / 2])
+//    .scale(width/1.5)
+//    .translate([width / 4, height / 2.2])
 
 const pathGenerator = d3.geoPath()
-   .projection(projection)
+    .projection(projection)
 
 var svg = d3.select(".map-container").append("svg")
     .attr("width", width)
     .attr("height", height)
 
+// // Create Graticule
+// const graticuleG = svg.append('g')
+//     .attr('class', 'graticule')
+
 const countriesG = svg.append('g')
     .attr('class', 'countries')
+
+const graticule = d3.geoGraticule()
+    .step([12, 12])
+   
+// var gratLines = graticuleG.selectAll(".gratLines")
+//     .data(graticule.lines())
+//     .enter()
+//         .append("path")
+//             .attr("class", "gratLines")
+//             .attr("d", pathGenerator)
+
+// var gratBackground = graticuleG.append("path")
+//     .datum(graticule.outline())
+//     .attr("class", "gratBackground")
+//     .attr("d", pathGenerator)
+
+// gratLines.exit().remove()
  
 const colorScale = d3.scaleLinear()
-    .range(['red', 'pink'])
+    .range(['darkred', 'red'])
+
 Promise.all([
     d3.json('data/worldMap50mSimplified.json', function(error, world) {
         if (error) return console.error(error)}),
@@ -73,7 +99,7 @@ function createMap(africaArray) {
        .enter()
           .append('path')
              .attr('class', d => 'country ' + d.properties.SOV_A3)
-             .attr('d', d => pathGenerator(d))
+             .attr('d', pathGenerator)
              .style('fill', d => {
                 if (d.properties.CorruptionPerceptionIndex2015) { // modify
                    return colorScale(d.properties.CorruptionPerceptionIndex2015) // modify
@@ -81,9 +107,8 @@ function createMap(africaArray) {
              })
              .on("mousemove", moveToolTip)
              .on("mouseout", hideToolTip)
+    
  }
-
-
 
  function moveToolTip(d) {
     if (d.properties.CorruptionPerceptionIndex2015) {  // modify

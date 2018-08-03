@@ -1,5 +1,9 @@
 /* Stylesheet by Andrew Pittman, 2018 */
 
+.main-section {
+  background-color: darkgray;
+}
+
 .countries {
   fill: #222;
   stroke: #fff;
@@ -65,4 +69,14 @@
   margin: 2px;
   color: white;
   display: inline;
+}
+
+.gratLines {
+  fill: none;
+  stroke: #999;
+  stroke-width: 1px;
+}
+
+.gratBackground {
+  fill: rgba(36, 71, 141, 0.212);
 }
