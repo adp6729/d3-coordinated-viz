@@ -117,8 +117,7 @@ function createMap(africaArray) {
        tooltip.style('top', d3.mouse(this)[1] + 100 + 'px')
        const cPFormat = d3.format(".0%")
        tooltip.html(`
-          <p>${d.properties.ADMIN} </p>
-          <p class="number">${cPFormat(d.properties.CorruptionPerceptionIndex2015)}</p>
+          <p>${d.properties.ADMIN} <span class="number">${cPFormat(d.properties.CorruptionPerceptionIndex2015)}</span></p>          
        `) // modify above
        
        d3.select(this)
