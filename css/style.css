@@ -69,6 +69,7 @@
   margin: 2px;
   color: white;
   display: inline;
+  white-space: nowrap;
 }
 
 .gratLines {
