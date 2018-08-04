@@ -76,7 +76,8 @@
   fill: white;
   /* stroke: black; */
   /* stroke-width: 0.7; */
-  font-family: sans-serif; 
+  font-family: sans-serif;
+  font-size: 0.85em;
 }
 
 .axis path,
@@ -100,7 +101,12 @@
 
 /* buffer section */
 
-.buffer-section {
-  height: 40px;
+.buffer-section-top {
+  height: 50px;
+  width: auto;
+}
+
+.buffer-section-bottom {
+  height: 30px;
   width: auto;
 }

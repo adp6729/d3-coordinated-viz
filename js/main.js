@@ -204,7 +204,7 @@ function createChart(africaArray) {
 
     const axis = chartSVG.append("g")
         .attr("class", "axis")
-        .attr("transform", "translate(0, " + chartHeight + ")")
+        .attr("transform", "translate(0, " + (chartHeight) + ")")
         .call(d3.axisTop(barScale))
 }
 
