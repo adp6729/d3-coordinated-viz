@@ -208,6 +208,10 @@ function createChart(africaArray) {
         .call(d3.axisTop(barScale))
 }
 
+function rerender(selectionIndex) {
+    console.log(selectionIndex)
+}
+
 // Lab Module 2-1, All Lessons
 // const width = 900, height = 500
 
