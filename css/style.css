@@ -4,14 +4,66 @@
   background-color: darkgray;
 }
 
-.countries {
-  fill: #222;
+.gratLines {
+  fill: none;
+  stroke: #999;
+  stroke-width: 1px;
+}
+
+.gratBackground {
+  fill: rgba(36, 71, 141, 0.212);
+}
+
+/* map css styles */
+
+.map-container {
+  height: auto;
+  border: gray
+}
+
+.map-container path.country {
+  fill: gray;
   stroke: #fff;
 }
 
-.countries :hover {
-  fill: #973232;
-  stroke: rgb(0, 0, 0);
+.map-container > .map-tooltip {
+  background-color: #343a40;
+  opacity: 0;
+  z-index: 999;
+  position: absolute;
+  min-width: 50px;
+  pointer-events: none;
+  border: 2px black;
+  padding: 2px;
+  border-radius: 3px;
+  box-shadow: 2px 2px 2px black;
+}
+
+.map-container > .map-tooltip .number {
+  font-family: monospace;
+  text-align: right;
+  font-size: 1.3em;
+  font-weight: 800;
+  color: rgb(255, 0, 0);
+}
+
+.map-container > .map-tooltip p {
+  margin: 2px;
+  color: white;
+  display: inline;
+  white-space: nowrap;
+}
+
+/* bar chart css */
+
+.bar-chart {
+  width: 100%;
+  height: auto;
+}
+
+.bar-chart path.bar {
+  fill: gray;
+  stroke: #fff;
 }
 
 .axis path,
@@ -33,51 +85,9 @@
     font-weight: bold;
 }
 
-/* added css styles */
-.map-container {
-  width: 50%;
-  height: auto;
-  border: gray
-}
+/* buffer section */
 
-.map-container path.country {
-  fill: gray;
-}
-
-.map-container > .map-tooltip {
-  background-color: rgb(0, 0, 0);
-  opacity: 0;
-  z-index: 999;
-  position: absolute;
-  min-width: 50px;
-  pointer-events: none;
-  border: 2px black;
-  padding: 2px;
-  border-radius: 3px;
-  box-shadow: 2px 2px 2px black;
-}
-
-.map-container > .map-tooltip .number {
-  font-family: monospace;
-  text-align: right;
-  font-size: 1.2em;
-  font-weight: 600;
-  color: rgb(255, 0, 0);
-}
-
-.map-container > .map-tooltip p {
-  margin: 2px;
-  color: white;
-  display: inline;
-  white-space: nowrap;
-}
-
-.gratLines {
-  fill: none;
-  stroke: #999;
-  stroke-width: 1px;
-}
-
-.gratBackground {
-  fill: rgba(36, 71, 141, 0.212);
+.buffer-section {
+  height: 40px;
+  width: auto;
 }

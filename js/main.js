@@ -4,15 +4,16 @@
 // Corruption and Governance map of Africa
 const body = d3.select("body")
 const container = d3.select(".map-container")
+const chart = d3.select(".bar-chart")
 
 const tooltip = d3.select(".map-container .map-tooltip")
 
-const width = parseInt(body.style("width"))/2
+const width = parseInt(container.style("width"))
 const height = width/0.88
 
 const projection = d3.geoMercator() // projection used for the mercator projection
     .center([17, 1])
-    .scale(width/1.22)
+    .scale(width/1.3)
     .translate([width / 2, height / 2])
 //    .scale(width/1.5)
 //    .translate([width / 4, height / 2.2])
@@ -20,16 +21,17 @@ const projection = d3.geoMercator() // projection used for the mercator projecti
 const pathGenerator = d3.geoPath()
     .projection(projection)
 
-var svg = d3.select(".map-container").append("svg")
+var svg = container.append("svg")
     .attr("width", width)
     .attr("height", height)
+
+const countriesG = svg.append('g')
+    .attr('class', 'countries')
 
 // // Create Graticule
 // const graticuleG = svg.append('g')
 //     .attr('class', 'graticule')
 
-const countriesG = svg.append('g')
-    .attr('class', 'countries')
 
 const graticule = d3.geoGraticule()
     .step([12, 12])
@@ -49,7 +51,7 @@ const graticule = d3.geoGraticule()
 // gratLines.exit().remove()
  
 const colorScale = d3.scaleLinear()
-    .range(['darkred', 'red'])
+    .range(['red', 'lightblue'])
 
 Promise.all([
     d3.json('data/worldMap50mSimplified.json', function(error, world) {
@@ -66,6 +68,7 @@ Promise.all([
 )
     .then(processData)
     .then(createMap)
+    .then(createChart)
 
 function processData(results) {
     const geoJson = topojson.feature(results[0],results[0].objects.ne_50m_admin_0_countries_lakes)
@@ -98,7 +101,7 @@ function createMap(africaArray) {
        .data(africaArray)
        .enter()
           .append('path')
-             .attr('class', d => 'country ' + d.properties.SOV_A3)
+             .attr('class', d => 'country ' + d.properties.ISO_A2)
              .attr('d', pathGenerator)
              .style('fill', d => {
                 if (d.properties.CorruptionPerceptionIndex2015) { // modify
@@ -108,20 +111,22 @@ function createMap(africaArray) {
              .on("mousemove", moveToolTip)
              .on("mouseout", hideToolTip)
     
+    return africaArray
  }
 
  function moveToolTip(d) {
     if (d.properties.CorruptionPerceptionIndex2015) {  // modify
-       tooltip.style('opacity', 0.7)
-       tooltip.style('left', d3.mouse(this)[0] + 10 + 'px')
-       tooltip.style('top', d3.mouse(this)[1] + 100 + 'px')
+       tooltip.style('opacity', 0.8)
+       tooltip.style('left', d3.mouse(this)[0] + 20 + 'px')
+       tooltip.style('top', d3.mouse(this)[1] + 20 + 'px')
        const cPFormat = d3.format(".0%")
        tooltip.html(`
-          <p>${d.properties.ADMIN} <span class="number">${cPFormat(d.properties.CorruptionPerceptionIndex2015)}</span></p>          
+          <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(d.properties.CorruptionPerceptionIndex2015)}</span></p>          
        `) // modify above
        
        d3.select(this)
-          .style('stroke', 'black')
+          .style('stroke', '#343a40')
+          .style('stroke-width', '2.5')
           .raise()
     }
  }
@@ -130,7 +135,51 @@ function createMap(africaArray) {
     tooltip.style('opacity', 0)
     d3.select(this)
           .style('stroke', 'white')
+          .style('stroke-width', '1')
  }
+
+//  bar chart
+
+const chartWidth = parseInt(chart.style("width"))
+const chartHeight = width/0.88
+
+const barScale = d3.scaleLinear()
+    .range([0, chartWidth])
+    .domain([0, 100]);
+ 
+var chartSVG = chart.append("svg")
+    .attr("width", chartWidth)
+    .attr("height", chartHeight)
+    .attr("class", "chart")
+
+const barsG = chartSVG.append("g")
+    .attr("class", "bars")
+
+function createChart(africaArray) {
+    const cPFormat = d3.format(".0%")
+    barsG
+        .selectAll('path')
+        .data(africaArray)
+        .enter()
+            .append('rect')
+                .sort((a, b) => (d3.descending(a.properties.CorruptionPerceptionIndex2015, b.properties.CorruptionPerceptionIndex2015)))
+                .attr("class", d => 'bar ' + d.properties.ISO_A2)
+                .attr("width", d => {
+                    var width = 0
+                    if (d.properties.CorruptionPerceptionIndex2015) {
+                        width = barScale(parseInt(cPFormat(d.properties.CorruptionPerceptionIndex2015)))
+                    }
+                    return width
+                })
+                .attr("x", 0)
+                .attr("height", chartWidth / africaArray.length - 1)
+                .attr("y", (d, i) => i * (chartHeight / africaArray.length))
+                .style('fill', d => {
+                    if (d.properties.CorruptionPerceptionIndex2015) { // modify
+                       return colorScale(d.properties.CorruptionPerceptionIndex2015) // modify
+                    }
+                 })
+}
 
 // Lab Module 2-1, All Lessons
 // const width = 900, height = 500
