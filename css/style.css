@@ -57,13 +57,26 @@
 /* bar chart css */
 
 .bar-chart {
-  width: 100%;
+  width: 200%;
   height: auto;
+  padding: 20px 40px 30px 40px;
+  margin-bottom: 40px;
+}
+
+.bar-char-interior {
+  background-color: aqua;
 }
 
 .bar-chart path.bar {
   fill: gray;
   stroke: #fff;
+}
+
+.bar-chart text.number {
+  fill: white;
+  /* stroke: black; */
+  /* stroke-width: 0.7; */
+  font-family: sans-serif; 
 }
 
 .axis path,

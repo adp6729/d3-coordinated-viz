@@ -15,8 +15,6 @@ const projection = d3.geoMercator() // projection used for the mercator projecti
     .center([17, 1])
     .scale(width/1.3)
     .translate([width / 2, height / 2])
-//    .scale(width/1.5)
-//    .translate([width / 4, height / 2.2])
 
 const pathGenerator = d3.geoPath()
     .projection(projection)
@@ -32,9 +30,8 @@ const countriesG = svg.append('g')
 // const graticuleG = svg.append('g')
 //     .attr('class', 'graticule')
 
-
-const graticule = d3.geoGraticule()
-    .step([12, 12])
+// const graticule = d3.geoGraticule()
+//     .step([12, 12])
    
 // var gratLines = graticuleG.selectAll(".gratLines")
 //     .data(graticule.lines())
@@ -51,7 +48,7 @@ const graticule = d3.geoGraticule()
 // gratLines.exit().remove()
  
 const colorScale = d3.scaleLinear()
-    .range(['red', 'lightblue'])
+    .range(['black', 'red'])
 
 Promise.all([
     d3.json('data/worldMap50mSimplified.json', function(error, world) {
@@ -141,10 +138,10 @@ function createMap(africaArray) {
 //  bar chart
 
 const chartWidth = parseInt(chart.style("width"))
-const chartHeight = width/0.88
+const chartHeight = width/0.92
 
 const barScale = d3.scaleLinear()
-    .range([0, chartWidth])
+    .range([0, chartWidth - 40 - 40])
     .domain([0, 100]);
  
 var chartSVG = chart.append("svg")
@@ -156,10 +153,11 @@ const barsG = chartSVG.append("g")
     .attr("class", "bars")
 
 function createChart(africaArray) {
+    const filteredAfricaArray = africaArray.filter(d => !isNaN(d.properties.CorruptionPerceptionIndex2015))
     const cPFormat = d3.format(".0%")
     barsG
         .selectAll('path')
-        .data(africaArray)
+        .data(filteredAfricaArray)
         .enter()
             .append('rect')
                 .sort((a, b) => (d3.descending(a.properties.CorruptionPerceptionIndex2015, b.properties.CorruptionPerceptionIndex2015)))
@@ -172,13 +170,42 @@ function createChart(africaArray) {
                     return width
                 })
                 .attr("x", 0)
-                .attr("height", chartWidth / africaArray.length - 1)
-                .attr("y", (d, i) => i * (chartHeight / africaArray.length))
+                .attr("height", chartHeight / filteredAfricaArray.length - 2)
+                .attr("y", (d, i) => i * (chartHeight / (filteredAfricaArray.length + 1)))
                 .style('fill', d => {
                     if (d.properties.CorruptionPerceptionIndex2015) { // modify
                        return colorScale(d.properties.CorruptionPerceptionIndex2015) // modify
                     }
                  })
+    barsG
+        .selectAll('text')
+        .data(filteredAfricaArray)
+        .enter()
+            .append('text')
+                .sort((a, b) => (d3.descending(a.properties.CorruptionPerceptionIndex2015, b.properties.CorruptionPerceptionIndex2015)))
+                .attr("class", d => 'number ' + d.properties.ISO_A2)
+                .attr("text-anchor", "right")
+                .attr("x", (d, i) => {
+                    var x = 0
+                    if (d.properties.CorruptionPerceptionIndex2015) {
+                        x = barScale(parseInt(cPFormat(d.properties.CorruptionPerceptionIndex2015)))
+                    }
+                    return x - 38
+                })
+                .attr("y", (d, i) => {
+                    const fraction = chartHeight / (filteredAfricaArray.length + 1)
+                    return (i + 0.9) * fraction 
+                })
+                .text(d => cPFormat(d.properties.CorruptionPerceptionIndex2015))
+    
+    // const xAxis = d3.axisTop()
+    //     .scale(barScale)
+    //     .orient("top")
+
+    const axis = chartSVG.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0, " + chartHeight + ")")
+        .call(d3.axisTop(barScale))
 }
 
 // Lab Module 2-1, All Lessons
