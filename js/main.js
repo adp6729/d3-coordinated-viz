@@ -26,6 +26,31 @@ var svg = container.append("svg")
 const countriesG = svg.append('g')
     .attr('class', 'countries')
 
+// Handle data initialization
+const attributes = [ {"Indicator": "CorruptionPerceptionIndex2015",
+                        "Name": "Corruption Perception",
+                        "Format": ".0%"}, 
+                    {"Indicator": "CorruptionControl2015", 
+                        "Name": "Corruption Control",
+                        "Format": ".0%"},
+                    {"Indicator": "IbrahimIndex2015", 
+                        "Name": "Ibrahim Index",
+                        "Format": ".0"}, 
+                    {"Indicator": "EaseOfDoingBusinessRank2015", 
+                        "Name": "Ease of Doing Business",
+                        "Format": ".0"}, 
+                    {"Indicator": "NAIPerAdultDollars2017", 
+                        "Name": "National Average Income Per Adult",
+                        "Format": "$.2"}, 
+                    {"Indicator": "GDPPerAdultDollars2017", 
+                        "Name": "Gross Domestic Product Per Adult",
+                        "Format": "$.2"}
+                    ]
+
+const attributeMap = d3.map(attributes, d => d.Indicator)
+        
+
+
 // // Create Graticule
 // const graticuleG = svg.append('g')
 //     .attr('class', 'graticule')
@@ -88,7 +113,7 @@ function processData(results) {
         }
     }
     colorScale.domain(d3.extent(cData, d=>d.CorruptionPerceptionIndex2015))
-    window.colorScale = colorScale // globalize colorScale
+    window.cData = cData // globalize colorScale
     return africaArray
 }
 
@@ -208,8 +233,51 @@ function createChart(africaArray) {
         .call(d3.axisTop(barScale))
 }
 
-function rerender(selectionIndex) {
-    console.log(selectionIndex)
+function rerender(selectionIndicator) {
+    const dataPrefix = "d.properties."
+    const cPFormat = d3.format(attributeMap.get(selectionIndicator).Format)
+    colorScale.domain(d3.extent(cData, d=>eval("d." + selectionIndicator)))
+
+    // Reset indicator text on nav bar
+    d3.select("#navbarDropdownMenuLink")
+        .text(attributeMap.get(selectionIndicator).Name)
+    
+    d3.selectAll(".country")
+        .style("fill", d => {
+            outColor = "#808080"
+            if (eval(dataPrefix + selectionIndicator)) {
+                outColor = colorScale(eval(dataPrefix + selectionIndicator))
+            }
+            return outColor
+        })
+        .on("mousemove", moveToolTip)
+        .on("mouseout", hideToolTip)
+
+    function moveToolTip(d) {
+        if (eval(dataPrefix + selectionIndicator)) {
+            tooltip.style('opacity', 0.8)
+            tooltip.style('left', d3.mouse(this)[0] + 20 + 'px')
+            tooltip.style('top', d3.mouse(this)[1] + 20 + 'px')
+            tooltip.html(`
+                <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(eval(dataPrefix + selectionIndicator))}</span></p>          
+            `)
+            
+            d3.select(this)
+                .style('stroke', '#343a40')
+                .style('stroke-width', '2.5')
+                .raise()
+        }
+    }
+
+    function hideToolTip(d) {
+        tooltip.style('opacity', 0)
+        d3.select(this)
+              .style('stroke', 'white')
+              .style('stroke-width', '1')
+     }
+    
+    d3.selectAll(".bar")
+        
 }
 
 // Lab Module 2-1, All Lessons
