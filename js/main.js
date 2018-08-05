@@ -35,16 +35,16 @@ const attributes = [ {"Indicator": "CorruptionPerceptionIndex2015",
                         "Format": ".0%"},
                     {"Indicator": "IbrahimIndex2015", 
                         "Name": "Ibrahim Index",
-                        "Format": ".0"}, 
+                        "Format": ".0f"}, 
                     {"Indicator": "EaseOfDoingBusinessRank2015", 
                         "Name": "Ease of Doing Business",
-                        "Format": ".0"}, 
+                        "Format": ".0f"}, 
                     {"Indicator": "NAIPerAdultDollars2017", 
                         "Name": "National Average Income Per Adult",
-                        "Format": "$.2"}, 
+                        "Format": "$,.2f"}, 
                     {"Indicator": "GDPPerAdultDollars2017", 
                         "Name": "Gross Domestic Product Per Adult",
-                        "Format": "$.2"}
+                        "Format": "$,.2f"}
                     ]
 
 const attributeMap = d3.map(attributes, d => d.Indicator)
