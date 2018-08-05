@@ -27,27 +27,39 @@ const countriesG = svg.append('g')
     .attr('class', 'countries')
 
 // Handle data initialization
-const attributes = [ {"Indicator": "CorruptionPerceptionIndex2015",
-                        "Name": "Corruption Perception",
-                        "Format": ".0%"}, 
-                    {"Indicator": "CorruptionControl2015", 
-                        "Name": "Corruption Control",
-                        "Format": ".0%"},
-                    {"Indicator": "IbrahimIndex2015", 
-                        "Name": "Ibrahim Index",
-                        "Format": ".0f"}, 
-                    {"Indicator": "EaseOfDoingBusinessRank2015", 
-                        "Name": "Ease of Doing Business",
-                        "Format": ".0f"}, 
-                    {"Indicator": "NAIPerAdultDollars2017", 
-                        "Name": "National Average Income Per Adult",
-                        "Format": "$,.2f"}, 
-                    {"Indicator": "GDPPerAdultDollars2017", 
-                        "Name": "Gross Domestic Product Per Adult",
-                        "Format": "$,.2f"}
+const attributes = [ {"indicator": "CorruptionPerceptionIndex2015",
+                        "name": "Corruption Perception",
+                        "format": ".0%",
+                        "domainData": [0, 1], 
+                        "domainBar": [0, 100]}, 
+                    {"indicator": "CorruptionControl2015", 
+                        "name": "Corruption Control",
+                        "format": ".0%", 
+                        "domainData": [0, 1],
+                        "domainBar": [0, 100]},
+                    {"indicator": "IbrahimIndex2015", 
+                        "name": "Ibrahim Index",
+                        "format": ".0f", 
+                        "domainData": [55, 0],
+                        "domainBar": [0, 55]}, 
+                    {"indicator": "EaseOfDoingBusinessRank2015", 
+                        "name": "Ease of Doing Business",
+                        "format": ".0f", 
+                        "domainData": [250, 0],
+                        "domainBar": [0, 250]}, 
+                    {"indicator": "NAIPerAdultDollars2017", 
+                        "name": "National Average Income Per Adult",
+                        "format": "$,.2f", 
+                        "domainData": [0, 35000],
+                        "domainBar": [0, 35000]}, 
+                    {"indicator": "GDPPerAdultDollars2017", 
+                        "name": "Gross Domestic Product Per Adult",
+                        "format": "$,.2f", 
+                        "domainData": [0, 45000],
+                        "domainBar": [0, 45000]}
                     ]
 
-const attributeMap = d3.map(attributes, d => d.Indicator)
+const attributeMap = d3.map(attributes, d => d.indicator)
         
 
 
@@ -113,7 +125,8 @@ function processData(results) {
         }
     }
     colorScale.domain(d3.extent(cData, d=>d.CorruptionPerceptionIndex2015))
-    window.cData = cData // globalize colorScale
+    window.cData = cData // globalize
+    window.africaArray = africaArray // globalize
     return africaArray
 }
 
@@ -170,7 +183,7 @@ const barScale = d3.scaleLinear()
     .domain([0, 100]);
  
 var chartSVG = chart.append("svg")
-    .attr("width", chartWidth)
+    .attr("width", chartWidth - 40 - 40)
     .attr("height", chartHeight)
     .attr("class", "chart")
 
@@ -234,19 +247,20 @@ function createChart(africaArray) {
 }
 
 function rerender(selectionIndicator) {
-    const dataPrefix = "d.properties."
-    const cPFormat = d3.format(attributeMap.get(selectionIndicator).Format)
-    colorScale.domain(d3.extent(cData, d=>eval("d." + selectionIndicator)))
+    const dataString = "d.properties." + selectionIndicator
+    const cPFormat = d3.format(attributeMap.get(selectionIndicator).format)
+    colorScale.domain(attributeMap.get(selectionIndicator).domainData)
 
     // Reset indicator text on nav bar
     d3.select("#navbarDropdownMenuLink")
-        .text(attributeMap.get(selectionIndicator).Name)
+        .text(attributeMap.get(selectionIndicator).name)
     
+    // Change map fill and tooltip text upon indicator change
     d3.selectAll(".country")
         .style("fill", d => {
             outColor = "#808080"
-            if (eval(dataPrefix + selectionIndicator)) {
-                outColor = colorScale(eval(dataPrefix + selectionIndicator))
+            if (eval(dataString)) {
+                outColor = colorScale(eval(dataString))
             }
             return outColor
         })
@@ -254,12 +268,12 @@ function rerender(selectionIndicator) {
         .on("mouseout", hideToolTip)
 
     function moveToolTip(d) {
-        if (eval(dataPrefix + selectionIndicator)) {
+        if (eval(dataString)) {
             tooltip.style('opacity', 0.8)
             tooltip.style('left', d3.mouse(this)[0] + 20 + 'px')
             tooltip.style('top', d3.mouse(this)[1] + 20 + 'px')
             tooltip.html(`
-                <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(eval(dataPrefix + selectionIndicator))}</span></p>          
+                <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(eval(dataString))}</span></p>          
             `)
             
             d3.select(this)
@@ -276,7 +290,39 @@ function rerender(selectionIndicator) {
               .style('stroke-width', '1')
      }
     
+    barScale.domain(attributeMap.get(selectionIndicator).domainBar)
+    const filteredAfricaArray = africaArray.filter(d => !isNaN(eval(dataString)))
+    
     d3.selectAll(".bar")
+        .sort((a, b) => {
+            if (selectionIndicator.includes('Ibrahim') || selectionIndicator.includes('Business')) {
+                return d3.ascending(eval('a.properties.' + selectionIndicator), eval('b.properties.' + selectionIndicator))
+            } else {
+                return d3.descending(eval('a.properties.' + selectionIndicator), eval('b.properties.' + selectionIndicator))
+            }
+        })
+        .attr("width", d => {
+            var width = 0
+            if (eval(dataString)) {
+                if (attributeMap.get(selectionIndicator).format.includes('%'))  {
+                    width = barScale(parseInt(cPFormat(eval(dataString))))
+                } else {
+                width = barScale(eval(dataString))
+                }
+            }
+            return width
+        })
+        .attr("x", 0)
+        .attr("y", (d, i) => i * (chartHeight / (filteredAfricaArray.length + 1)))
+        .style('fill', d => {
+            if (eval(dataString)) { 
+                console.log(d.properties.ISO_A2, colorScale(eval(dataString)))
+                return colorScale(eval(dataString))
+            }
+        })
+    
+    d3.select(".axis")
+        .call(d3.axisTop(barScale))
         
 }
 
