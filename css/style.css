@@ -26,7 +26,7 @@
   stroke: #fff;
 }
 
-.map-container > .map-tooltip {
+.body > .main-tooltip {
   background-color: #343a40;
   opacity: 0;
   z-index: 999;
@@ -39,7 +39,7 @@
   box-shadow: 2px 2px 2px black;
 }
 
-.map-container > .map-tooltip .number {
+.body > .main-tooltip .number {
   font-family: monospace;
   text-align: right;
   font-size: 1.3em;
@@ -47,7 +47,7 @@
   color: rgb(255, 0, 0);
 }
 
-.map-container > .map-tooltip p {
+.body > .main-tooltip p {
   margin: 2px;
   color: white;
   display: inline;
@@ -69,10 +69,10 @@
 
 .bar-chart path.bar {
   fill: gray;
-  stroke: #fff;
+  /* stroke: #fff; */
 }
 
-.bar-chart text.number {
+.bar-chart text.data {
   fill: white;
   /* stroke: black; */
   /* stroke-width: 0.7; */

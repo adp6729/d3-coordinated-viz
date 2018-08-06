@@ -6,14 +6,14 @@ const body = d3.select("body")
 const container = d3.select(".map-container")
 const chart = d3.select(".bar-chart")
 
-const tooltip = d3.select(".map-container .map-tooltip")
+const tooltip = d3.select(".main-tooltip")
 
 const width = parseInt(container.style("width"))
 const height = width/0.88
 
 const projection = d3.geoMercator() // projection used for the mercator projection
     .center([17, 1])
-    .scale(width/1.3)
+    .scale(width/1.5)
     .translate([width / 2, height / 2])
 
 const pathGenerator = d3.geoPath()
@@ -45,8 +45,8 @@ const attributes = [ {"indicator": "CorruptionPerceptionIndex2015",
                     {"indicator": "EaseOfDoingBusinessRank2015", 
                         "name": "Ease of Doing Business",
                         "format": ".0f", 
-                        "domainData": [250, 0],
-                        "domainBar": [0, 250]}, 
+                        "domainData": [195, 0],
+                        "domainBar": [0, 195]}, 
                     {"indicator": "NAIPerAdultDollars2017", 
                         "name": "National Average Income Per Adult",
                         "format": "$,.2f", 
@@ -61,7 +61,7 @@ const attributes = [ {"indicator": "CorruptionPerceptionIndex2015",
 
 const attributeMap = d3.map(attributes, d => d.indicator)
         
-
+const transitionDuration = 1000
 
 // // Create Graticule
 // const graticuleG = svg.append('g')
@@ -109,7 +109,7 @@ function processData(results) {
     const cData = results[1]
     var africaArray = []
     for (const feature of geoJson.features) {
-        if (feature.properties.CONTINENT == "Africa" || feature.properties.ISO_A2 == ('SC' || 'MU')) {
+        if (feature.properties.CONTINENT == "Africa" || ['SC', 'MU'].includes(feature.properties.ISO_A2 )) {
             for (const stat of cData) {
                 if (feature.properties.ISO_A2 == stat.ISO2) {
                     feature.properties.CorruptionPerceptionIndex2015 = stat.CorruptionPerceptionIndex2015
@@ -139,8 +139,8 @@ function createMap(africaArray) {
              .attr('class', d => 'country ' + d.properties.ISO_A2)
              .attr('d', pathGenerator)
              .style('fill', d => {
-                if (d.properties.CorruptionPerceptionIndex2015) { // modify
-                   return colorScale(d.properties.CorruptionPerceptionIndex2015) // modify
+                if (d.properties.CorruptionPerceptionIndex2015) { 
+                   return colorScale(d.properties.CorruptionPerceptionIndex2015) 
                 }
              })
              .on("mousemove", moveToolTip)
@@ -150,27 +150,31 @@ function createMap(africaArray) {
  }
 
  function moveToolTip(d) {
-    if (d.properties.CorruptionPerceptionIndex2015) {  // modify
+    if (d.properties.CorruptionPerceptionIndex2015) { 
        tooltip.style('opacity', 0.8)
-       tooltip.style('left', d3.mouse(this)[0] + 20 + 'px')
-       tooltip.style('top', d3.mouse(this)[1] + 20 + 'px')
+       tooltip.style('left', (d3.event.pageX + 10) + 'px')
+       tooltip.style('top', (d3.event.pageY + 20) + 'px')
        const cPFormat = d3.format(".0%")
        tooltip.html(`
           <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(d.properties.CorruptionPerceptionIndex2015)}</span></p>          
-       `) // modify above
+       `) 
        
-       d3.select(this)
-          .style('stroke', '#343a40')
+       d3.selectAll("." + d.properties.ISO_A2)
+          .style('stroke', '#fff')
           .style('stroke-width', '2.5')
           .raise()
     }
  }
  
  function hideToolTip(d) {
-    tooltip.style('opacity', 0)
-    d3.select(this)
-          .style('stroke', 'white')
-          .style('stroke-width', '1')
+    if (d.properties.CorruptionPerceptionIndex2015) {
+        tooltip.style('opacity', 0)
+        d3.select(".country." + d.properties.ISO_A2)
+            .style('stroke', 'white')
+            .style('stroke-width', '1')
+        d3.select(".bar." + d.properties.ISO_A2)
+            .style('stroke-width', '0')
+    }
  }
 
 //  bar chart
@@ -199,6 +203,8 @@ function createChart(africaArray) {
         .enter()
             .append('rect')
                 .sort((a, b) => (d3.descending(a.properties.CorruptionPerceptionIndex2015, b.properties.CorruptionPerceptionIndex2015)))
+                .on("mousemove", moveToolTip)
+                .on("mouseout", hideToolTip)
                 .attr("class", d => 'bar ' + d.properties.ISO_A2)
                 .attr("width", d => {
                     var width = 0
@@ -221,7 +227,7 @@ function createChart(africaArray) {
         .enter()
             .append('text')
                 .sort((a, b) => (d3.descending(a.properties.CorruptionPerceptionIndex2015, b.properties.CorruptionPerceptionIndex2015)))
-                .attr("class", d => 'number ' + d.properties.ISO_A2)
+                .attr("class", d => 'data ' + d.properties.ISO_A2)
                 .attr("text-anchor", "right")
                 .attr("x", (d, i) => {
                     var x = 0
@@ -234,7 +240,7 @@ function createChart(africaArray) {
                     const fraction = chartHeight / (filteredAfricaArray.length + 1)
                     return (i + 0.9) * fraction 
                 })
-                .text(d => cPFormat(d.properties.CorruptionPerceptionIndex2015))
+                // .text(d => cPFormat(d.properties.CorruptionPerceptionIndex2015))
     
     // const xAxis = d3.axisTop()
     //     .scale(barScale)
@@ -257,27 +263,29 @@ function rerender(selectionIndicator) {
     
     // Change map fill and tooltip text upon indicator change
     d3.selectAll(".country")
-        .style("fill", d => {
-            outColor = "#808080"
-            if (eval(dataString)) {
-                outColor = colorScale(eval(dataString))
-            }
-            return outColor
-        })
         .on("mousemove", moveToolTip)
         .on("mouseout", hideToolTip)
+        .transition()
+            .duration(transitionDuration)
+            .style("fill", d => {
+                outColor = "#808080"
+                if (eval(dataString)) {
+                    outColor = colorScale(eval(dataString))
+                }
+                return outColor
+            })
 
     function moveToolTip(d) {
         if (eval(dataString)) {
             tooltip.style('opacity', 0.8)
-            tooltip.style('left', d3.mouse(this)[0] + 20 + 'px')
-            tooltip.style('top', d3.mouse(this)[1] + 20 + 'px')
+            tooltip.style('left', d3.event.pageX + 'px')
+            tooltip.style('top', d3.event.pageY + 20 + 'px')
             tooltip.html(`
                 <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(eval(dataString))}</span></p>          
             `)
             
-            d3.select(this)
-                .style('stroke', '#343a40')
+            d3.selectAll("." + d.properties.ISO_A2)
+                .style('stroke', '#fff')
                 .style('stroke-width', '2.5')
                 .raise()
         }
@@ -285,9 +293,11 @@ function rerender(selectionIndicator) {
 
     function hideToolTip(d) {
         tooltip.style('opacity', 0)
-        d3.select(this)
+        d3.select(".country." + d.properties.ISO_A2)
               .style('stroke', 'white')
               .style('stroke-width', '1')
+        d3.select(".bar." + d.properties.ISO_A2)
+            .style('stroke-width', '0')
      }
     
     barScale.domain(attributeMap.get(selectionIndicator).domainBar)
@@ -301,28 +311,58 @@ function rerender(selectionIndicator) {
                 return d3.descending(eval('a.properties.' + selectionIndicator), eval('b.properties.' + selectionIndicator))
             }
         })
-        .attr("width", d => {
-            var width = 0
-            if (eval(dataString)) {
-                if (attributeMap.get(selectionIndicator).format.includes('%'))  {
-                    width = barScale(parseInt(cPFormat(eval(dataString))))
-                } else {
-                width = barScale(eval(dataString))
+        .on("mousemove", moveToolTip)
+        .on("mouseout", hideToolTip)
+        .transition()
+            .duration(transitionDuration)
+            .attr("width", d => {
+                var width = 0
+                if (eval(dataString)) {
+                    if (attributeMap.get(selectionIndicator).format.includes('%'))  {
+                        width = barScale(parseInt(cPFormat(eval(dataString))))
+                    } else {
+                    width = barScale(eval(dataString))
+                    }
                 }
-            }
-            return width
-        })
-        .attr("x", 0)
-        .attr("y", (d, i) => i * (chartHeight / (filteredAfricaArray.length + 1)))
-        .style('fill', d => {
-            if (eval(dataString)) { 
-                console.log(d.properties.ISO_A2, colorScale(eval(dataString)))
-                return colorScale(eval(dataString))
-            }
-        })
+                return width
+            })
+            .attr("x", 0)
+            .attr("y", (d, i) => i * (chartHeight / (filteredAfricaArray.length + 1)))
+            .style('fill', d => {
+                if (eval(dataString)) {
+                    return colorScale(eval(dataString))
+                }
+            })
     
     d3.select(".axis")
         .call(d3.axisTop(barScale))
+      
+    d3.selectAll(".data")
+        .sort((a, b) => {
+            if (selectionIndicator.includes('Ibrahim') || selectionIndicator.includes('Business')) {
+                return d3.ascending(eval('a.properties.' + selectionIndicator), eval('b.properties.' + selectionIndicator))
+            } else {
+                return d3.descending(eval('a.properties.' + selectionIndicator), eval('b.properties.' + selectionIndicator))
+            }
+        })
+        .transition()
+        .duration(transitionDuration)
+        .attr("x", (d, i) => {
+            var x = 0
+            if (eval(dataString)) {
+                if (attributeMap.get(selectionIndicator).format.includes('%'))  {
+                    x = barScale(parseInt(cPFormat(eval(dataString))))
+                } else {
+                x = barScale(eval(dataString))
+                }
+            }
+            return x - 20
+        })
+        .attr("y", (d, i) => {
+            const fraction = chartHeight / (filteredAfricaArray.length + 1)
+            return (i + 0.9) * fraction 
+        })
+        // .text(d => cPFormat(eval(dataString)))
         
 }
 
