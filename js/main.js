@@ -159,9 +159,11 @@ function createMap(africaArray) {
        tooltip.style('opacity', 1)
        let mouseX = d3.event.pageX
        const tooltipWidth = parseInt(tooltip.style('width'))
-       if (mouseX + tooltipWidth + 10 > widthBody) {
-           mouseX = widthBody - tooltipWidth - 10
+       if (mouseX + tooltipWidth + 20 > widthBody) {
+           mouseX = widthBody - tooltipWidth - 20
+           console.log('true')
        }
+       console.log('body: ' + widthBody + ', mouseX: ' + mouseX )
        tooltip.style('left', (mouseX + 10) + 'px')
        tooltip.style('top', (d3.event.pageY + 20) + 'px')
        
