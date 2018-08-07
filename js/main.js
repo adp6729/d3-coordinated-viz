@@ -151,7 +151,7 @@ function createMap(africaArray) {
 
  function moveToolTip(d) {
     if (d.properties.CorruptionPerceptionIndex2015) { 
-       tooltip.style('opacity', 0.8)
+       tooltip.style('opacity', 1)
        tooltip.style('left', (d3.event.pageX + 10) + 'px')
        tooltip.style('top', (d3.event.pageY + 20) + 'px')
        const cPFormat = d3.format(".0%")
@@ -277,7 +277,7 @@ function rerender(selectionIndicator) {
 
     function moveToolTip(d) {
         if (eval(dataString)) {
-            tooltip.style('opacity', 0.8)
+            tooltip.style('opacity', 1)
             tooltip.style('left', d3.event.pageX + 'px')
             tooltip.style('top', d3.event.pageY + 20 + 'px')
             tooltip.html(`
