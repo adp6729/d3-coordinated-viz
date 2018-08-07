@@ -160,7 +160,7 @@ function createMap(africaArray) {
        const tooltipWidth = parseInt(tooltip.style('width'))
        if ((mouseX + tooltipWidth + 10 > width) && (mouseX < width)) {
            mouseX = width - tooltipWidth - 10
-       } else if (((mouseX + tooltipWidth + 10 > chartWidth) && (mouseX < chartWidth))) {
+       } else if ((mouseX + tooltipWidth + 10 > chartWidth) && (mouseX < chartWidth)) {
            mouseX = chartWidth - tooltipWidth - 10
        }
        tooltip.style('left', (mouseX) + 'px')
