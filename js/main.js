@@ -161,9 +161,7 @@ function createMap(africaArray) {
        const tooltipWidth = parseInt(tooltip.style('width'))
        if (mouseX + tooltipWidth + 20 > widthBody) {
            mouseX = widthBody - tooltipWidth - 20
-           console.log('true')
        }
-       console.log('body: ' + widthBody + ', mouseX: ' + mouseX )
        tooltip.style('left', (mouseX + 10) + 'px')
        tooltip.style('top', (d3.event.pageY + 20) + 'px')
        
@@ -285,12 +283,17 @@ function rerender(selectionIndicator) {
 
     function moveToolTip(d) {
         if (eval(dataString)) {
-            tooltip.style('opacity', 1)
-            tooltip.style('left', d3.event.pageX + 'px')
-            tooltip.style('top', d3.event.pageY + 20 + 'px')
             tooltip.html(`
                 <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(eval(dataString))}</span></p>          
             `)
+            tooltip.style('opacity', 1)
+            let mouseX = d3.event.pageX
+            const tooltipWidth = parseInt(tooltip.style('width'))
+            if (mouseX + tooltipWidth + 20 > widthBody) {
+                mouseX = widthBody - tooltipWidth - 20
+            }
+            tooltip.style('left', (mouseX + 10) + 'px')
+            tooltip.style('top', d3.event.pageY + 20 + 'px')
             
             d3.selectAll("." + d.properties.ISO_A2)
                 .style('stroke', '#fff')
