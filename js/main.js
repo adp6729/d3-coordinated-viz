@@ -151,13 +151,18 @@ function createMap(africaArray) {
 
  function moveToolTip(d) {
     if (d.properties.CorruptionPerceptionIndex2015) { 
-       tooltip.style('opacity', 1)
-       tooltip.style('left', (d3.event.pageX + 10) + 'px')
-       tooltip.style('top', (d3.event.pageY + 20) + 'px')
        const cPFormat = d3.format(".0%")
        tooltip.html(`
           <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(d.properties.CorruptionPerceptionIndex2015)}</span></p>          
        `) 
+       tooltip.style('opacity', 1)
+       const mouseX = d3.event.pageX
+       const tooltipWidth = parseInt(tooltip.style('width'))
+       if(mouseX + tooltipWidth + 10 > width) {
+           mouseX = width - tooltipWidth - 10
+       }
+       tooltip.style('left', (mouseX) + 'px')
+       tooltip.style('top', (d3.event.pageY + 20) + 'px')
        
        d3.selectAll("." + d.properties.ISO_A2)
           .style('stroke', '#fff')
