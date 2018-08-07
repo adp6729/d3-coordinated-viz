@@ -156,10 +156,12 @@ function createMap(africaArray) {
           <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(d.properties.CorruptionPerceptionIndex2015)}</span></p>          
        `) 
        tooltip.style('opacity', 1)
-       const mouseX = d3.event.pageX
+       let mouseX = d3.event.pageX
        const tooltipWidth = parseInt(tooltip.style('width'))
-       if(mouseX + tooltipWidth + 10 > width) {
+       if ((mouseX + tooltipWidth + 10 > width) && (mouseX < width)) {
            mouseX = width - tooltipWidth - 10
+       } else if (((mouseX + tooltipWidth + 10 > chartWidth) && (mouseX < chartWidth))) {
+           mouseX = chartWidth - tooltipWidth - 10
        }
        tooltip.style('left', (mouseX) + 'px')
        tooltip.style('top', (d3.event.pageY + 20) + 'px')
