@@ -5,8 +5,9 @@
 const body = d3.select("body")
 const container = d3.select(".map-container")
 const chart = d3.select(".bar-chart")
-
 const tooltip = d3.select(".main-tooltip")
+
+const widthBody = parseInt(body.style("width"))
 
 const width = parseInt(container.style("width"))
 const height = width/0.88
@@ -158,12 +159,10 @@ function createMap(africaArray) {
        tooltip.style('opacity', 1)
        let mouseX = d3.event.pageX
        const tooltipWidth = parseInt(tooltip.style('width'))
-       if ((mouseX + tooltipWidth + 10 > width) && (mouseX < width)) {
-           mouseX = width - tooltipWidth - 10
-       } else if ((mouseX + tooltipWidth + 10 > chartWidth) && (mouseX < chartWidth)) {
-           mouseX = chartWidth - tooltipWidth - 10
+       if ((mouseX + tooltipWidth + 10 > widthBody) && (mouseX < widthBody)) {
+           mouseX = widthBody - tooltipWidth - 10
        }
-       tooltip.style('left', (mouseX) + 'px')
+       tooltip.style('left', (mouseX + 10) + 'px')
        tooltip.style('top', (d3.event.pageY + 20) + 'px')
        
        d3.selectAll("." + d.properties.ISO_A2)
