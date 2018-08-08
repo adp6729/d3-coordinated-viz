@@ -159,9 +159,8 @@ function createMap(africaArray) {
        tooltip.style('opacity', 1)
        let mouseX = d3.event.pageX
        const tooltipWidth = parseInt(tooltip.style('width'))
-       if (mouseX + tooltipWidth + 20 > widthBody) {
-           console.log(mouseX, tooltipWidth, widthBody)
-           mouseX = widthBody - tooltipWidth - 20
+       if ((mouseX + tooltipWidth + 20) >= widthBody - 17) {
+           mouseX = (widthBody - tooltipWidth - 20 - 17)
        }
        tooltip.style('left', (mouseX + 10) + 'px')
        tooltip.style('top', (d3.event.pageY + 20) + 'px')
@@ -290,9 +289,8 @@ function rerender(selectionIndicator) {
             tooltip.style('opacity', 1)
             let mouseX = d3.event.pageX
             const tooltipWidth = parseInt(tooltip.style('width'))
-            if (mouseX + tooltipWidth + 20 > widthBody) {
-                console.log(mouseX, tooltipWidth, widthBody)
-                mouseX = widthBody - tooltipWidth - 20
+            if ((mouseX + tooltipWidth + 20) >= widthBody - 17) {
+                mouseX = (widthBody - tooltipWidth - 20 - 17)
             }
             tooltip.style('left', (mouseX + 10) + 'px')
             tooltip.style('top', d3.event.pageY + 20 + 'px')
