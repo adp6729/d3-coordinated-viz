@@ -291,6 +291,7 @@ function rerender(selectionIndicator) {
             let mouseX = d3.event.pageX
             const tooltipWidth = parseInt(tooltip.style('width'))
             if (mouseX + tooltipWidth + 20 > widthBody) {
+                console.log(mouseX, tooltipWidth, widthBody)
                 mouseX = widthBody - tooltipWidth - 20
             }
             tooltip.style('left', (mouseX + 10) + 'px')
