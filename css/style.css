@@ -103,10 +103,10 @@
 
 .buffer-section-top {
   height: 50px;
-  width: auto;
+  width: min-content;
 }
 
 .buffer-section-bottom {
   height: 30px;
-  width: auto;
+  width: min-content;
 }
