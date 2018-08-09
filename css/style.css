@@ -59,9 +59,7 @@
 /* bar chart css */
 
 .bar-chart {
-  width: 200%;
   height: auto;
-  margin: 20px 40px 30px 40px;
 }
 
 .bar-char-interior {
@@ -98,16 +96,4 @@
     font-family: sans-serif;
     font-size: 1.5em;
     font-weight: bold;
-}
-
-/* buffer section */
-
-.buffer-section-top {
-  height: 50px;
-  width: min-content;
-}
-
-.buffer-section-bottom {
-  height: 30px;
-  width: min-content;
 }
