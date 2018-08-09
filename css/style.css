@@ -61,7 +61,7 @@
 .bar-chart {
   width: 200%;
   height: auto;
-  padding: 20px 40px 30px 40px;
+  margin: 20px 40px 30px 40px;
 }
 
 .bar-char-interior {
