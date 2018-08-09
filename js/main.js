@@ -184,20 +184,23 @@ function createMap(africaArray) {
  }
 
 //  bar chart
-
-const chartWidth = parseInt(chart.style("width"))
-const chartHeight = width/1.06
+const margin = {top: 20, right: 40, bottom: 30, left: 40}
+const chartWidth = parseInt(chart.style("width")) - margin.left - margin.right
+const chartHeight = height - margin.top - margin.bottom
 
 const barScale = d3.scaleLinear()
-    .range([0, chartWidth - 40 - 40])
+    .range([0, chartWidth])
     .domain([0, 100]);
  
 var chartSVG = chart.append("svg")
-    .attr("width", chartWidth - 40 - 40)
+    .attr("width", chartWidth)
     .attr("height", chartHeight)
     .attr("class", "chart")
 
-const barsG = chartSVG.append("g")
+const chartG = chartSVG.append('g')
+    .attr('transform', `translate(${margin.left},${margin.top})`)
+
+const barsG = chartG.append("g")
     .attr("class", "bars")
 
 function createChart(africaArray) {
@@ -252,7 +255,7 @@ function createChart(africaArray) {
     //     .scale(barScale)
     //     .orient("top")
 
-    const axis = chartSVG.append("g")
+    const axis = chartG.append("g")
         .attr("class", "axis")
         .attr("transform", "translate(0, " + (chartHeight) + ")")
         .call(d3.axisTop(barScale))
