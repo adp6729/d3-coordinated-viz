@@ -10,7 +10,7 @@ const tooltip = d3.select(".main-tooltip")
 const widthBody = parseInt(body.style("width"))
 
 const width = parseInt(container.style("width"))
-const height = width/0.88
+const height = width
 
 const projection = d3.geoMercator() // projection used for the mercator projection
     .center([17, 1])
@@ -186,7 +186,7 @@ function createMap(africaArray) {
 //  bar chart
 
 const chartWidth = parseInt(chart.style("width"))
-const chartHeight = width/0.92
+const chartHeight = width/1.06
 
 const barScale = d3.scaleLinear()
     .range([0, chartWidth - 40 - 40])
