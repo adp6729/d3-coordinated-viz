@@ -215,7 +215,7 @@ function createMap(africaArray) {
     .style('width', width/2.7 + 'px')
  d3.select('.card .card-header')
     .text(attributeMap.get(selectionIndicator).name)
-    .style('font-weight', 900)
+    .style('font-weight', 700)
  d3.select('.card-text')
     .text(attributeMap.get(selectionIndicator).infoCardText)
  d3.select('.card .card-body a')
