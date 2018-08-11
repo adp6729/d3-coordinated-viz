@@ -33,6 +33,10 @@
   position: absolute;
 }
 
+.info {
+  font-size: 0.9em;
+}
+
 /* tooltip styles */
 
 .body > .main-tooltip {
