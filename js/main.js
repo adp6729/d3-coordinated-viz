@@ -10,7 +10,7 @@ const tooltip = d3.select(".main-tooltip")
 const widthBody = parseInt(body.style("width"))
 
 const width = parseInt(container.style("width"))
-const height = width
+const height = width - (width * 0.03)
 
 const projection = d3.geoMercator() // projection used for the mercator projection
     .center([17, 1])
@@ -178,7 +178,7 @@ function createMap(africaArray) {
 
  function moveToolTip(d) {
     if (d.properties.CorruptionPerceptionIndex2015) { 
-       const cPFormat = d3.format(".0%")
+       const cPFormat = d3.format(attributeMap.get(selectionIndicator).formatText)
        tooltip.html(`
           <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(d.properties.CorruptionPerceptionIndex2015)}</span></p>          
        `) 
@@ -211,7 +211,7 @@ function createMap(africaArray) {
 
  d3.select('.infocard')
     .style('left', 20 + 'px')
-    .style('top', height/1.8 + 'px')
+    .style('top', height/1.85 + 'px')
     .style('width', width/2.7 + 'px')
  d3.select('.card .card-header')
     .text(attributeMap.get(selectionIndicator).name)
