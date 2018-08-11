@@ -114,6 +114,9 @@ const transitionDuration = 1000
 const colorScale = d3.scaleLinear()
     .range(['black', 'red'])
 
+const colorScaleMoney = d3.scaleLinear()
+    .range(['black', 'green'])
+
 Promise.all([
     d3.json('data/worldMap50mSimplified.json', function(error, world) {
         if (error) return console.error(error)}),
@@ -317,7 +320,13 @@ function rerender(selectionIndicator) {
     const dataString = "d.properties." + selectionIndicator
     const cPFormat = d3.format(attributeMap.get(selectionIndicator).formatText)
     const tickFormat = d3.format(attributeMap.get(selectionIndicator).formatScale)
-    colorScale.domain(attributeMap.get(selectionIndicator).domainData)
+    if (attributeMap.get(selectionIndicator).formatText.includes('$')) {
+        colorScaleMoney.domain(attributeMap.get(selectionIndicator).domainData)
+        var moneyFlag = true
+    } else {
+        colorScale.domain(attributeMap.get(selectionIndicator).domainData)
+        var moneyFlag = false
+    }
 
     // Reset indicator text on nav bar
     d3.select("#navbarDropdownMenuLink")
@@ -332,7 +341,11 @@ function rerender(selectionIndicator) {
             .style("fill", d => {
                 outColor = "#808080"
                 if (eval(dataString)) {
-                    outColor = colorScale(eval(dataString))
+                    if (moneyFlag) {
+                        outColor = colorScaleMoney(eval(dataString))
+                    } else {
+                        outColor = colorScale(eval(dataString))
+                    }
                 }
                 return outColor
             })
@@ -406,7 +419,11 @@ function rerender(selectionIndicator) {
             .attr("y", (d, i) => i * (chartHeightMargin / (filteredAfricaArray.length + 1)))
             .style('fill', d => {
                 if (eval(dataString)) {
-                    return colorScale(eval(dataString))
+                    if (moneyFlag) {
+                        return colorScaleMoney(eval(dataString))
+                    } else {
+                        return colorScale(eval(dataString))
+                    }
                 }
             })
     
