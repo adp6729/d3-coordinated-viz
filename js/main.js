@@ -205,7 +205,7 @@ function createMap(africaArray) {
           .style('stroke', '#fff')
           .style('stroke-width', '2.5')
           .raise()
-       d3.select(.data)
+       d3.selectAll(".data")
           .raise()
     }
  }
@@ -218,8 +218,6 @@ function createMap(africaArray) {
             .style('stroke-width', '1')
         d3.select(".bar." + d.properties.ISO_A2)
             .style('stroke-width', '0')
-        d3.select(.data)
-            .lower()
     }
  }
 
