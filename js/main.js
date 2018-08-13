@@ -300,7 +300,7 @@ function createChart(africaArray) {
                     .delay(function(d, i){
                         return i * 15
                     })
-                    .duration(transitionDuration).attr("class", d => 'data ' + d.properties.ISO_A2)
+                    .duration(transitionDuration).attr("class", d => 'data')
                     .attr("text-anchor", "right")
                     .attr("x", (d, i) => {
                         return 2                
@@ -314,7 +314,7 @@ function createChart(africaArray) {
                         const fraction = (chartHeightMargin) / (filteredAfricaArray.length + 1)
                         return (i + 0.9) * fraction 
                     })
-                    .text(d => d.properties.ISO_A2)
+                    .text(d => d.properties.Admin)
 
     chartG.append("g")
         .attr("class", "axis")
