@@ -92,6 +92,7 @@
   /* stroke-width: 0.7; */
   font-family: sans-serif;
   font-size: 0.65em;
+  pointer-events: none;
 }
 
 .axis path,
