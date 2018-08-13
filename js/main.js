@@ -312,7 +312,7 @@ function createChart(africaArray) {
                     })
                     .attr("y", (d, i) => {
                         const fraction = (chartHeightMargin) / (filteredAfricaArray.length + 1)
-                        return (i + 0.9) * fraction 
+                        return (i + 0.9) * fraction + 1
                     })
                     .text(d => d.properties.NAME)
 
