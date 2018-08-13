@@ -112,7 +112,7 @@ const transitionDuration = 1000
 // gratLines.exit().remove()
  
 const colorScale = d3.scaleLinear()
-    .range(['black', 'red'])
+    .range(['red', 'black'])
 
 const colorScaleMoney = d3.scaleLinear()
     .range(['black', 'green'])
