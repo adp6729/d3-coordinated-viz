@@ -313,7 +313,7 @@ function createChart(africaArray) {
                         const fraction = (chartHeightMargin) / (filteredAfricaArray.length + 1)
                         return (i + 0.9) * fraction 
                     })
-                    // .text(d => cPFormat(d.properties.CorruptionPerceptionIndex2015))
+                    .text(d => cPFormat(d.properties.ISO_A2))
 
     chartG.append("g")
         .attr("class", "axis")
@@ -433,5 +433,5 @@ function rerender(selectionIndicator) {
                 const fraction = chartHeightMargin / (filteredAfricaArray.length + 1)
                 return (i + 0.9) * fraction 
             })
-            // .text(d => cPFormat(d.properties[selectionIndicator]))
+            // .text(d => cPFormat(d.properties.ISO_A2))
 }
