@@ -188,8 +188,7 @@ function createMap(africaArray) {
 
  function moveToolTip(d) {
     if (d.properties.CorruptionPerceptionIndex2015) { 
-       const cPFormat = d3.format(attributeMap.get(selectionIndicator).formatText)
-       console.log(attributeMap.get(selectionIndicator).formatText)
+       const cPFormat = d3.format(attributeMap.get(currentIndicator).formatText)
        tooltip.html(`
           <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(d.properties[currentIndicator])}</span></p>          
        `) 
