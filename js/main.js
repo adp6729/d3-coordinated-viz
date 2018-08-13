@@ -344,20 +344,20 @@ function rerender(selectionIndicator) {
             .duration(transitionDuration)
             .style("fill", d => {
                 outColor = "#808080"
-                if (eval(dataString)) {
+                if (d.properties[selectionIndicator]) {
                     if (moneyFlag) {
-                        outColor = colorScaleMoney(eval(dataString))
+                        outColor = colorScaleMoney(d.properties[selectionIndicator])
                     } else {
-                        outColor = colorScale(eval(dataString))
+                        outColor = colorScale(d.properties[selectionIndicator])
                     }
                 }
                 return outColor
             })
 
     function moveToolTip(d) {
-        if (eval(dataString)) {
+        if (d.properties[selectionIndicator]) {
             tooltip.html(`
-                <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(eval(dataString))}</span></p>          
+                <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(d.properties[selectionIndicator])}</span></p>          
             `)
             tooltip.style('opacity', 1)
             let mouseX = d3.event.pageX
@@ -395,16 +395,20 @@ function rerender(selectionIndicator) {
         .text(attributeMap.get(selectionIndicator).infoCardLinkTitle)
     
     barScale.domain(attributeMap.get(selectionIndicator).domainBar)
-    const filteredAfricaArray = africaArray.filter(d => !isNaN(eval(dataString)))
+    const filteredAfricaArray = africaArray.filter(d => !isNaN(d.properties[selectionIndicator]))
+    
+//     const sortFunction = (selectionIndicator.includes('Ibrahim') || selectionIndicator.includes('Business')) ? 'ascending' : 'descending'
+//     return d3[sortFunction](a.properties[selectionIndicator], b.properties[selectionIndicator])
+    const sortFunction = (a, b) => {
+            if (selectionIndicator.includes('Ibrahim') || selectionIndicator.includes('Business')) {
+                return d3.ascending(a.properties[selectionIndicator], b.properties[selectionIndicator])
+            } else {
+                return d3.descending(a.properties[selectionIndicator], b.properties[selectionIndicator])
+            }
+        }
     
     d3.selectAll(".bar")
-        .sort((a, b) => {
-            if (selectionIndicator.includes('Ibrahim') || selectionIndicator.includes('Business')) {
-                return d3.ascending(eval('a.properties.' + selectionIndicator), eval('b.properties.' + selectionIndicator))
-            } else {
-                return d3.descending(eval('a.properties.' + selectionIndicator), eval('b.properties.' + selectionIndicator))
-            }
-        })
+        .sort(sortFunction)
         .on("mousemove", moveToolTip)
         .on("mouseout", hideToolTip)
         .transition()
@@ -414,19 +418,19 @@ function rerender(selectionIndicator) {
             .duration(transitionDuration)
             .attr("width", d => {
                 var width = 0
-                if (eval(dataString)) {
-                    width = barScale(eval(dataString))
+                if (d.properties[selectionIndicator]) {
+                    width = barScale(d.properties[selectionIndicator])
                 }
                 return width
             })
             .attr("x", 0)
             .attr("y", (d, i) => i * (chartHeightMargin / (filteredAfricaArray.length + 1)))
             .style('fill', d => {
-                if (eval(dataString)) {
+                if (d.properties[selectionIndicator]) {
                     if (moneyFlag) {
-                        return colorScaleMoney(eval(dataString))
+                        return colorScaleMoney(d.properties[selectionIndicator])
                     } else {
-                        return colorScale(eval(dataString))
+                        return colorScale(d.properties[selectionIndicator])
                     }
                 }
             })
@@ -436,13 +440,7 @@ function rerender(selectionIndicator) {
             .tickFormat(tickFormat))
       
     d3.selectAll(".data")
-        .sort((a, b) => {
-            if (selectionIndicator.includes('Ibrahim') || selectionIndicator.includes('Business')) {
-                return d3.ascending(eval('a.properties.' + selectionIndicator), eval('b.properties.' + selectionIndicator))
-            } else {
-                return d3.descending(eval('a.properties.' + selectionIndicator), eval('b.properties.' + selectionIndicator))
-            }
-        })
+        .sort(sortFunction)
         .transition()
             .delay(function(d, i){
                 return i * 15
@@ -450,8 +448,8 @@ function rerender(selectionIndicator) {
             .duration(transitionDuration)
             .attr("x", (d, i) => {
                 var x = 0
-                if (eval(dataString)) {
-                    x = barScale(eval(dataString))
+                if (d.properties[selectionIndicator]) {
+                    x = barScale(d.properties[selectionIndicator])
                 }
                 return x - 20
             })
@@ -459,5 +457,5 @@ function rerender(selectionIndicator) {
                 const fraction = chartHeightMargin / (filteredAfricaArray.length + 1)
                 return (i + 0.9) * fraction 
             })
-            // .text(d => cPFormat(eval(dataString)))
+            // .text(d => cPFormat(d.properties[selectionIndicator]))
 }
