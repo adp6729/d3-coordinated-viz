@@ -314,7 +314,7 @@ function createChart(africaArray) {
                         const fraction = (chartHeightMargin) / (filteredAfricaArray.length + 1)
                         return (i + 0.9) * fraction 
                     })
-                    .text(d => d.properties.Admin)
+                    .text(d => d.properties.ADMIN)
 
     chartG.append("g")
         .attr("class", "axis")
