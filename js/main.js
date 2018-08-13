@@ -2,6 +2,7 @@
 // author: Andrew Pittman
 
 // Corruption and Governance map of Africa
+let currentIndicator = 'CorruptionPerceptionIndex2015'
 const body = d3.select("body")
 const container = d3.select(".map-container")
 const chart = d3.select(".bar-chart")
@@ -189,7 +190,7 @@ function createMap(africaArray) {
     if (d.properties.CorruptionPerceptionIndex2015) { 
        const cPFormat = d3.format(attributeMap.get(selectionIndicator).formatText)
        tooltip.html(`
-          <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(d.properties.CorruptionPerceptionIndex2015)}</span></p>          
+          <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(d.properties[currentIndicator])}</span></p>          
        `) 
        tooltip.style('opacity', 1)
        let mouseX = d3.event.pageX
@@ -323,6 +324,9 @@ function createChart(africaArray) {
 }
 
 function rerender(selectionIndicator) {
+    
+    currentIndicator = selectionIndicator
+    
     const dataString = "d.properties." + selectionIndicator
     const indicatorOptions = attributeMap.get(selectionIndicator)
     const cPFormat = d3.format(indicatorOptions.formatText)
@@ -343,8 +347,6 @@ function rerender(selectionIndicator) {
     
     // Change map fill and tooltip text upon indicator change
     d3.selectAll(".country")
-        .on("mousemove", moveToolTip)
-        .on("mouseout", hideToolTip)
         .transition()
             .duration(transitionDuration)
             .style("fill", d => {
@@ -358,37 +360,6 @@ function rerender(selectionIndicator) {
                 }
                 return outColor
             })
-
-    function moveToolTip(d) {
-        if (d.properties[selectionIndicator]) {
-            tooltip.html(`
-                <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(d.properties[selectionIndicator])}</span></p>          
-            `)
-            tooltip.style('opacity', 1)
-            let mouseX = d3.event.pageX
-            const tooltipWidth = parseInt(tooltip.style('width'))
-            if ((mouseX + tooltipWidth + 20) >= widthBody - 17) {
-                mouseX = (widthBody - tooltipWidth - 20 - 17)
-            }
-            tooltip.style('left', (mouseX + 10) + 'px')
-            tooltip.style('top', d3.event.pageY + 20 + 'px')
-            
-            d3.selectAll("." + d.properties.ISO_A2)
-                .style('stroke', '#fff')
-                .style('stroke-width', '2.5')
-                .raise()
-        }
-    }
-
-    function hideToolTip(d) {
-        tooltip.style('opacity', 0)
-        d3.select(".country." + d.properties.ISO_A2)
-              .style('stroke', 'white')
-              .style('stroke-width', '1')
-        d3.select(".bar." + d.properties.ISO_A2)
-            .style('stroke-width', '0')
-     }
-
     
     d3.select('.card .card-header')
         .text(attributeMap.get(selectionIndicator).name)
