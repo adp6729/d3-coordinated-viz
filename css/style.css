@@ -87,11 +87,11 @@
 }
 
 .bar-chart text.data {
-  fill: white;
+  fill: hsla(0,0%,0%,0.75);
   /* stroke: black; */
   /* stroke-width: 0.7; */
   font-family: sans-serif;
-  font-size: 0.85em;
+  font-size: 0.65em;
 }
 
 .axis path,
