@@ -295,7 +295,7 @@ function createChart(africaArray) {
         .data(filteredAfricaArray)
         .enter()
             .append('text')
-                .sort((a, b) => (d3.descending(a.properties.CorruptionPerceptionIndex2015, b.properties.CorruptionPerceptionIndex2015)))
+                .sort((a, b) => (d3.descending(a.properties[currentIndicator], b.properties[currentIndicator])))
                 .transition()
                     .delay(function(d, i){
                         return i * 15
@@ -312,7 +312,7 @@ function createChart(africaArray) {
                     })
                     .attr("y", (d, i) => {
                         const fraction = (chartHeightMargin) / (filteredAfricaArray.length + 1)
-                        return (i + 0.9) * fraction + 1
+                        return (i + 0.9) * fraction - 1
                     })
                     .text(d => d.properties.NAME)
 
@@ -423,16 +423,10 @@ function rerender(selectionIndicator) {
                 return i * 15
             })
             .duration(transitionDuration)
-            .attr("x", (d, i) => {
-                var x = 0
-                if (d.properties[selectionIndicator]) {
-                    x = barScale(d.properties[selectionIndicator])
-                }
-                return x - 20
-            })
+            .attr("x", 2)
             .attr("y", (d, i) => {
                 const fraction = chartHeightMargin / (filteredAfricaArray.length + 1)
-                return (i + 0.9) * fraction 
+                return (i + 0.9) * fraction - 1
             })
             // .text(d => cPFormat(d.properties.ISO_A2))
 }
