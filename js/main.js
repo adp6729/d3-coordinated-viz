@@ -321,14 +321,10 @@ function rerender(selectionIndicator) {
     const cPFormat = d3.format(attributeMap.get(selectionIndicator).formatText)
     const tickFormat = d3.format(attributeMap.get(selectionIndicator).formatScale)
     if (attributeMap.get(selectionIndicator).formatText.includes('$')) {
-        console.log(d3.extent(africaArray, d=> d.properties[selectionIndicator]))
         colorScaleMoney.domain(d3.extent(africaArray, d=> d.properties[selectionIndicator]))
-//         colorScaleMoney.domain(attributeMap.get(selectionIndicator).domainData)
         var moneyFlag = true
     } else {        
-        console.log(d3.extent(africaArray, d=> d.properties[selectionIndicator]))
-        colorScaleMoney.domain(d3.extent(africaArray, d=> d.properties[selectionIndicator]))
-//         colorScale.domain(attributeMap.get(selectionIndicator).domainData)
+        colorScale.domain(d3.extent(africaArray, d=> d.properties[selectionIndicator]))
         var moneyFlag = false
     }
 
