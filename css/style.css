@@ -87,7 +87,7 @@
 }
 
 .bar-chart text.data {
-  fill: hsla(0,0%,0%,0.75);
+  fill: hsla(0,0%,100%,0.75);
   /* stroke: black; */
   /* stroke-width: 0.7; */
   font-family: sans-serif;
