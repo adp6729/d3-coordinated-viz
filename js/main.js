@@ -303,17 +303,18 @@ function createChart(africaArray) {
                     .duration(transitionDuration).attr("class", d => 'data ' + d.properties.ISO_A2)
                     .attr("text-anchor", "right")
                     .attr("x", (d, i) => {
-                        var x = 0
-                        if (d.properties.CorruptionPerceptionIndex2015) {
-                            x = barScale(d.properties.CorruptionPerceptionIndex2015)
-                        }
-                        return x - 38
+                        return 2                
+//                         var x = 0
+//                         if (d.properties.CorruptionPerceptionIndex2015) {
+//                             x = barScale(d.properties.CorruptionPerceptionIndex2015)
+//                         }
+//                         return x - 38
                     })
                     .attr("y", (d, i) => {
                         const fraction = (chartHeightMargin) / (filteredAfricaArray.length + 1)
                         return (i + 0.9) * fraction 
                     })
-                    .text(d => cPFormat(d.properties.ISO_A2))
+                    .text(d => d.properties.ISO_A2)
 
     chartG.append("g")
         .attr("class", "axis")
