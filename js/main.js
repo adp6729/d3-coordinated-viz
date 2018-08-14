@@ -349,7 +349,7 @@ function createChart(africaArray) {
                             })
                             .attr("x", (d, i) => {
                                 if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
-                                    return barScale(parseFloat(d.properties[currentIndicator]))
+                                    return barScale(parseFloat(d.properties[currentIndicator])) + 2
 //                                     return 2
                                 } else {
                                     return 2
@@ -491,7 +491,7 @@ function rerender(selectionIndicator) {
                     })
                     .attr("x", (d, i) => {
                         if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
-                            return barScale(parseFloat(d.properties[currentIndicator]))
+                            return barScale(parseFloat(d.properties[currentIndicator])) + 2
 //                             return 2
                         } else {
                             return 2
