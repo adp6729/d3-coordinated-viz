@@ -37,11 +37,12 @@
   font-size: 0.75em;
 }
 
-@media (max-width: 1000px) {
+/* future use of management of ss */
+/* @media (max-width: 1000px) {
   .infocard {
     width: initial; 
   }
-}
+} */
 
 .sourceLink {
   font-size: 0.9em;
