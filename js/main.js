@@ -342,11 +342,17 @@ function createChart(africaArray) {
                         d3.select(this)
                             .attr("x", (d, i) => {
                                 if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
-                                    return barScale(parseFloat(d.properties[currentIndicator]))
+//                                     return barScale(parseFloat(d.properties[currentIndicator]))
+                                    return 2
                                 } else {
                                     return 2
                                 }
                             })
+                            .text(d => {
+                                if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
+                                    return d.properties.ISO_A2
+                                }
+                            }
                     })
 
     // add chart axis below bars
@@ -482,5 +488,10 @@ function rerender(selectionIndicator) {
                             return 2
                         }
                     })
+                    .text(d => {
+                        if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
+                            return d.properties.ISO_A2
+                        }
+                    }
             })
 }
