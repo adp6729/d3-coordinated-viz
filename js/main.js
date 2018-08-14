@@ -2,6 +2,8 @@
 // author: Andrew Pittman
 
 // Corruption and Governance map of Africa
+
+// Initialize variables
 let currentIndicator = 'CorruptionPerceptionIndex2015'
 const body = d3.select("body")
 const container = d3.select(".map-container")
@@ -13,14 +15,16 @@ const widthBody = parseInt(body.style("width"))
 const width = parseInt(container.style("width"))
 const height = width - (width * 0.03)
 
+// create projection and path generator
 const projection = d3.geoMercator() // projection used for the mercator projection
-    .center([17, 1])
+    .center([17, 1]) // center and zoom on African continent
     .scale(width/1.5)
     .translate([width / 2, height / 2])
 
 const pathGenerator = d3.geoPath()
     .projection(projection)
 
+// create map container and countries group
 var svg = container.append("svg")
     .attr("width", width)
     .attr("height", height)
@@ -28,10 +32,10 @@ var svg = container.append("svg")
 const countriesG = svg.append('g')
     .attr('class', 'countries')
 
-// Handle data initialization
+// Handle data initialization for each indicator
 const attributes = [ {"indicator": "CorruptionPerceptionIndex2015",
                         "name": "Corruption Perception Index",
-                        "infoCardText": "Transparency International\'s Corruption Perception Index: Low scores indicate that a country is perceived as highly corrupt.",
+                        "infoCardText": "Transparency International\'s Corruption Perception Index (CPI). The CPI generally defines corruption as \"the misuse of public power for private benefit\". Low scores (darker) indicate that a country is perceived as highly corrupt.",
                         "infoCardLinkURL": "https://ourworldindata.org/corruption",
                         "infoCardLinkTitle": "Our World in Data",
                         "formatText": ".0f",
@@ -41,7 +45,7 @@ const attributes = [ {"indicator": "CorruptionPerceptionIndex2015",
                         "order": "ascending"}, 
                     {"indicator": "CorruptionControl2015", 
                         "name": "Corruption Control",
-                        "infoCardText": "World Bank's Corruption Control Index: Perceptions of the extent to which public power is exercised for private gain, including both petty and grand forms of corruption, as well as \"capture\" of the state by elites and private interests.",
+                        "infoCardText": "World Bank's Corruption Control Index: Perceptions of the extent to which public power is exercised for private gain, including both all forms of corruption, as well as \"capture\" of the state by elites and private interests. Low scores (darker) indicate that a country is perceived as highly corrupt.",
                         "infoCardLinkURL": "https://wid.world/data/",
                         "infoCardLinkTitle": "World Inequality Database",
                         "formatText": ".0f", 
@@ -51,7 +55,7 @@ const attributes = [ {"indicator": "CorruptionPerceptionIndex2015",
                         "order": "ascending"},
                     {"indicator": "IbrahimIndex2015", 
                         "name": "Ibrahim Index Rank",
-                        "infoCardText": "The Ibrahim Index of African Governance (IIAG), generated my the Mo Ibrahim Foundation, ranks governance performance in African countries.",
+                        "infoCardText": "The Ibrahim Index of African Governance (IIAG) ranks governance performance in African countries, assessing safety, rule of law, participation, human rights, sustainable economic opportunity and human development. Lower rankings (darker) indicate that a country's governance is poor.",
                         "infoCardLinkURL": "http://dataportal.opendataforafrica.org/lfkgixg/governance",
                         "infoCardLinkTitle": "Africa Information Highway",
                         "formatText": ".0f", 
@@ -61,7 +65,7 @@ const attributes = [ {"indicator": "CorruptionPerceptionIndex2015",
                         "order": "descending"},
                     {"indicator": "EaseOfDoingBusinessRank2015", 
                         "name": "Ease of Doing Business Rank",
-                        "infoCardText": "This topic tracks the procedures that agregate a number of indicators that shows the global level of difficulty of doing business in a given country",
+                        "infoCardText": "This metric tracks the procedures that agregate a number of indicators depicting the global level of difficulty of doing business in a given country. Metric depicts ranking on a global scale (195 nations). Lower rankings (darker) indicate increased difficulty conducting business in a country.",
                         "infoCardLinkURL": "http://dataportal.opendataforafrica.org/lfkgixg/governance",
                         "infoCardLinkTitle": "Africa Information Highway",
                         "formatText": ".0f", 
@@ -71,7 +75,7 @@ const attributes = [ {"indicator": "CorruptionPerceptionIndex2015",
                         "order": "descending"}, 
                     {"indicator": "NAIPerAdultDollars2017", 
                         "name": "National Average Income Per Adult",
-                        "infoCardText": "National income garnered by every adult in a country divided by the number of adults in that country. Converted to USD.",
+                        "infoCardText": "National income garnered by every adult in a country divided by the number of adults in that country. Converted to USD. Lower monetary amounts (darker) indicate less income availability for a country's citizens.",
                         "infoCardLinkURL": "https://wid.world/data/",
                         "infoCardLinkTitle": "World Inequality Database",
                         "formatText": "$,.0f", 
@@ -81,7 +85,7 @@ const attributes = [ {"indicator": "CorruptionPerceptionIndex2015",
                         "order": "ascending"}, 
                     {"indicator": "GDPPerAdultDollars2017", 
                         "name": "Gross Domestic Product Per Adult",
-                        "infoCardText": "Gross domestic product total generated by a country divided by the number of adults in that country. Converted to USD.",
+                        "infoCardText": "Gross domestic product total generated by a country divided by the number of adults in that country. Converted to USD. Lower monetary amounts (darker) indicate decreased work opportunity for a country's citizens.",
                         "infoCardLinkURL": "https://wid.world/data/",
                         "infoCardLinkTitle": "World Inequality Database",
                         "formatText": "$,.0f", 
@@ -91,13 +95,14 @@ const attributes = [ {"indicator": "CorruptionPerceptionIndex2015",
                         "order": "ascending"}
                     ]
 
+// Handle attribute mapping
 const attributeMap = d3.map(attributes, d => d.indicator)
 
 const selectionIndicator = "CorruptionPerceptionIndex2015"
         
 const transitionDuration = 1000
 
-// // Create Graticule
+// // Create Graticule, if needed (currently unused)
 // const graticuleG = svg.append('g')
 //     .attr('class', 'graticule')
 
@@ -118,12 +123,18 @@ const transitionDuration = 1000
 
 // gratLines.exit().remove()
  
-const colorScale = d3.scaleLinear()
-    .range(['red', 'black'])
 
-const colorScaleMoney = d3.scaleLinear()
-    .range(['black', 'green'])
+// initialize color scales for use
+const colorScale = d3.scaleSequential(d3.interpolateInferno) // color scale for non money related indicators
 
+const colorScaleMoney = d3.scaleLinear() // color scale for money related indicators
+    .range(['black', '#55e862'])
+
+const colorScaleText = d3.scaleLinear() // color scale to show greatest contrast for bar labels
+    .range(['black', 'white'])
+    .domain([-1,8])
+
+// read in all data via Promise, then structure (js v5)
 Promise.all([
     d3.json('data/worldMap50mSimplified.json', function(error, world) {
         if (error) return console.error(error)}),
@@ -141,11 +152,13 @@ Promise.all([
     .then(createMap)
     .then(createChart)
 
+// first function after reading in data
 function processData(results) {
     const geoJson = topojson.feature(results[0],results[0].objects.ne_50m_admin_0_countries_lakes)
     const cData = results[1]
     var africaArray = []
     for (const feature of geoJson.features) {
+        // Only read in countries in the African continent, and Mauritius/Seychelles
         if (feature.properties.CONTINENT == "Africa" || ['SC', 'MU'].includes(feature.properties.ISO_A2 )) {
             for (const stat of cData) {
                 if (feature.properties.ISO_A2 == stat.ISO2) {
@@ -158,59 +171,64 @@ function processData(results) {
                     break
                 }
             }
-            africaArray.push(feature)
+            africaArray.push(feature) // push data that meets criteria to array for countries needed
         }
     }
-    colorScale.domain(d3.extent(cData, d=>d.CorruptionPerceptionIndex2015))
+    colorScale.domain(d3.extent(cData, d=>d[currentIndicator]))
     window.cData = cData // globalize
     window.africaArray = africaArray // globalize
     return africaArray
 }
 
+// second function after reading in data, utilizing africaArray
 function createMap(africaArray) {
+    // generate the paths for the African countries of interest
     countriesG
-       .selectAll('path')
-       .data(africaArray)
-       .enter()
-          .append('path')
-             .attr('class', d => 'country ' + d.properties.ISO_A2)
-             .attr('d', pathGenerator)
-             .style('fill', d => {
+        .selectAll('path')
+        .data(africaArray)
+        .enter()
+            .append('path')
+                .attr('class', d => 'country ' + d.properties.ISO_A2) // assign classes for use later
+                .attr('d', pathGenerator)
+                .style('fill', d => {
                 if (d.properties.CorruptionPerceptionIndex2015) { 
-                   return colorScale(d.properties.CorruptionPerceptionIndex2015) 
+                    return colorScale(d.properties.CorruptionPerceptionIndex2015) 
                 }
-             })
-             .on("mousemove", moveToolTip)
-             .on("mouseout", hideToolTip)
-    
-    return africaArray
- }
+                })
+                .on("mousemove", moveToolTip) // add mouse interaction capability
+                .on("mouseout", hideToolTip)
 
- function moveToolTip(d) {
+    return africaArray
+}
+
+// when the mouse moves over a country or bar
+function moveToolTip(d) {
     if (d.properties.CorruptionPerceptionIndex2015) { 
-       const cPFormat = d3.format(attributeMap.get(currentIndicator).formatText)
-       tooltip.html(`
-          <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(d.properties[currentIndicator])}</span></p>          
-       `) 
-       tooltip.style('opacity', 1)
-       let mouseX = d3.event.pageX
-       const tooltipWidth = parseInt(tooltip.style('width'))
-       if ((mouseX + tooltipWidth + 20) >= widthBody - 17) {
-           mouseX = (widthBody - tooltipWidth - 20 - 17)
-       }
-       tooltip.style('left', (mouseX + 10) + 'px')
-       tooltip.style('top', (d3.event.pageY + 20) + 'px')
-       
-       d3.selectAll("." + d.properties.ISO_A2)
-          .style('stroke', '#fff')
-          .style('stroke-width', '2.5')
-          .raise()
-       d3.selectAll(".data")
-          .raise()
+        // apply indicator specific formatting for tooltip
+        const cPFormat = d3.format(attributeMap.get(currentIndicator).formatText)
+        tooltip.html(`
+            <p>${d.properties.ADMIN}<span class="number"> ${cPFormat(d.properties[currentIndicator])}</span></p>          
+        `) 
+        tooltip.style('opacity', 1)
+        let mouseX = d3.event.pageX
+        const tooltipWidth = parseInt(tooltip.style('width'))
+        if ((mouseX + tooltipWidth + 20) >= widthBody - 17) { // handle case where the tooltip hits the edge of the body
+            mouseX = (widthBody - tooltipWidth - 20 - 17)
+        }
+        tooltip.style('left', (mouseX + 10) + 'px') // specify tooltip location
+        tooltip.style('top', (d3.event.pageY + 20) + 'px')
+        
+        d3.selectAll("." + d.properties.ISO_A2)
+            .style('stroke', '#fff')
+            .style('stroke-width', '2.5')
+            .raise()
+        d3.selectAll(".data")
+            .raise()
     }
- }
- 
- function hideToolTip(d) {
+}
+
+// when the mouse exits a country or bar
+function hideToolTip(d) {
     if (d.properties.CorruptionPerceptionIndex2015) {
         tooltip.style('opacity', 0)
         d3.select(".country." + d.properties.ISO_A2)
@@ -219,50 +237,57 @@ function createMap(africaArray) {
         d3.select(".bar." + d.properties.ISO_A2)
             .style('stroke-width', '0')
     }
- }
+}
 
- d3.select('.infocard')
+// create info card for indicator information and button w/ source link
+d3.select('.infocard')
     .style('left', 20 + 'px')
     .style('top', height/1.85 + 'px')
-    .style('width', width/2.7 + 'px')
- d3.select('.card .card-header')
+    .style('width', width/2.6 + 'px')
+d3.select('.card .card-header')
     .text(attributeMap.get(selectionIndicator).name)
     .style('font-weight', 700)
- d3.select('.card-text')
+d3.select('.card-text')
     .text(attributeMap.get(selectionIndicator).infoCardText)
- d3.select('.card .card-body a')
+d3.select('.card .card-body a')
     .attr("href", attributeMap.get(selectionIndicator).infoCardLinkURL)
- d3.select('.sourceLink')
+d3.select('.sourceLink')
     .text(attributeMap.get(selectionIndicator).infoCardLinkTitle)
 
-//  bar chart
+// bar chart- initialize variables
 const margin = {top: 20, right: 30, bottom: 30, left: 30}
 const chartWidth = parseInt(chart.style("width")) - 30
 const chartHeight = height
+// add margin into chart width and height for buffer from map, body edge, and div edges (scale)
 const chartWidthMargin = chartWidth - margin.left - margin.right
 const chartHeightMargin = chartHeight - margin.top - margin.bottom
 
+// create chart scale
 const barScale = d3.scaleLinear()
     .range([0, chartWidthMargin])
     .domain(attributeMap.get(selectionIndicator).domainBar);
- 
+
+// create chart svg
 var chartSVG = chart.append("svg")
     .attr("width", chartWidth)
     .attr("height", chartHeight)
     .attr("class", "chart")
 
+// create overall chart group, transform appropriately
 const chartG = chartSVG.append('g')
     .attr("width", chartWidthMargin)
     .attr("height", chartHeightMargin)
     .attr('transform', `translate(${margin.left},${margin.top})`)
 
+// create group for just chart bars
 const barsG = chartG.append("g")
     .attr("class", "bars")
 
+// third function after data ingest, chart creation using africaArray
 function createChart(africaArray) {
     const filteredAfricaArray = africaArray.filter(d => !isNaN(d.properties.CorruptionPerceptionIndex2015))
-    const cPFormat = d3.format(attributeMap.get(selectionIndicator).formatText)
     const tickFormat = d3.format(attributeMap.get(selectionIndicator).formatScale)
+    // create bar chart bars
     barsG
         .selectAll('path')
         .data(filteredAfricaArray)
@@ -271,7 +296,7 @@ function createChart(africaArray) {
                 .sort((a, b) => (d3.descending(a.properties.CorruptionPerceptionIndex2015, b.properties.CorruptionPerceptionIndex2015)))
                 .on("mousemove", moveToolTip)
                 .on("mouseout", hideToolTip)
-                .transition()
+                .transition() // apply cascade transition
                     .delay(function(d, i){
                         return i * 15
                     })
@@ -292,49 +317,56 @@ function createChart(africaArray) {
                         return colorScale(d.properties.CorruptionPerceptionIndex2015) // modify
                         }
                     })
+    // create bar chart labels
     barsG
         .selectAll('text')
         .data(filteredAfricaArray)
         .enter()
             .append('text')
                 .sort((a, b) => (d3.descending(a.properties[currentIndicator], b.properties[currentIndicator])))
-                .transition()
+                .text(d => d.properties.NAME)                
+                .attr("class", d => 'data')
+                .transition() // apply cascade transition
                     .delay(function(d, i){
-                        return i * 15
+                        return i * 15 + 35
                     })
-                    .duration(transitionDuration).attr("class", d => 'data')
+                    .duration(transitionDuration)
                     .attr("text-anchor", "right")
-                    .attr("x", (d, i) => {
-                        return 2                
-//                         var x = 0
-//                         if (d.properties.CorruptionPerceptionIndex2015) {
-//                             x = barScale(d.properties.CorruptionPerceptionIndex2015)
-//                         }
-//                         return x - 38
-                    })
                     .attr("y", (d, i) => {
                         const fraction = (chartHeightMargin) / (filteredAfricaArray.length + 1)
-                        return (i + 0.9) * fraction - 1
+                        return (i + 0.9) * fraction - 2
                     })
-                    .text(d => d.properties.NAME)
+                    .style("fill", (d, i) => colorScaleText(i)) // dynamically change color of label based on index
+                    .each(function(d,i) { // dynamically change location of label if the label is longer than the bar
+                        textLength = this.getComputedTextLength()
+                        d3.select(this)
+                            .attr("x", (d, i) => {
+                                if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
+                                    return barScale(parseFloat(d.properties[currentIndicator]))
+                                } else {
+                                    return 2
+                                }
+                            })
+                    })
 
+    // add chart axis below bars
     chartG.append("g")
         .attr("class", "axis")
         .attr("transform", "translate(0, " + (chartHeightMargin) + ")")
         .call(d3.axisBottom(barScale)
             .ticks(10)
-            .tickFormat(tickFormat))
+            .tickFormat(tickFormat)) // apply indicator specific formatting
 }
 
+// function called upon selection of a different indicator via boostrap menu
 function rerender(selectionIndicator) {
     
+    // initialize needed variables
     currentIndicator = selectionIndicator
-    
-    const dataString = "d.properties." + selectionIndicator
     const indicatorOptions = attributeMap.get(selectionIndicator)
-    const cPFormat = d3.format(indicatorOptions.formatText)
     const tickFormat = d3.format(indicatorOptions.formatScale)
-     
+    
+    // modify and set color scale domain appropriately
     const colorDomain = d3.extent(africaArray, d=> d.properties[selectionIndicator]).sort(d3[indicatorOptions.order])
     if (attributeMap.get(selectionIndicator).formatText.includes('$')) {
         colorScaleMoney.domain(colorDomain)
@@ -355,7 +387,7 @@ function rerender(selectionIndicator) {
             .style("fill", d => {
                 outColor = "#808080"
                 if (d.properties[selectionIndicator]) {
-                    if (moneyFlag) {
+                    if (moneyFlag) { // apply correct color scale to countries
                         outColor = colorScaleMoney(d.properties[selectionIndicator])
                     } else {
                         outColor = colorScale(d.properties[selectionIndicator])
@@ -364,6 +396,7 @@ function rerender(selectionIndicator) {
                 return outColor
             })
     
+    // update info card information, link and header to match current indicator
     d3.select('.card .card-header')
         .text(attributeMap.get(selectionIndicator).name)
     d3.select('.card-text')
@@ -373,11 +406,15 @@ function rerender(selectionIndicator) {
     d3.select('.sourceLink')
         .text(attributeMap.get(selectionIndicator).infoCardLinkTitle)
     
+    // update bar scale domain
     barScale.domain(attributeMap.get(selectionIndicator).domainBar)
     const filteredAfricaArray = africaArray.filter(d => !isNaN(d.properties[selectionIndicator]))
     
+    // another way to accomplish the code in the next block, keeping for alternative options in the future
 //     const sortFunction = (selectionIndicator.includes('Ibrahim') || selectionIndicator.includes('Business')) ? 'ascending' : 'descending'
 //     return d3[sortFunction](a.properties[selectionIndicator], b.properties[selectionIndicator])
+
+    // depending on the indicator, different sorting is needed, accomplished here
     const sortFunction = (a, b) => {
             if (selectionIndicator.includes('Ibrahim') || selectionIndicator.includes('Business')) {
                 return d3.ascending(a.properties[selectionIndicator], b.properties[selectionIndicator])
@@ -386,6 +423,7 @@ function rerender(selectionIndicator) {
             }
         }
     
+    // rearrange all the bars in the bar chart
     d3.selectAll(".bar")
         .sort(sortFunction)
         .on("mousemove", moveToolTip)
@@ -406,7 +444,7 @@ function rerender(selectionIndicator) {
             .attr("y", (d, i) => i * (chartHeightMargin / (filteredAfricaArray.length + 1)))
             .style('fill', d => {
                 if (d.properties[selectionIndicator]) {
-                    if (moneyFlag) {
+                    if (moneyFlag) { // apply correct color scale to countries
                         return colorScaleMoney(d.properties[selectionIndicator])
                     } else {
                         return colorScale(d.properties[selectionIndicator])
@@ -414,10 +452,12 @@ function rerender(selectionIndicator) {
                 }
             })
     
+    // call new bar scale with updated tick format based on new indicator
     d3.select(".axis")
         .call(d3.axisBottom(barScale)
             .tickFormat(tickFormat))
-      
+    
+    // rearrange and update all text labels associated with the bars
     d3.selectAll(".data")
         .sort(sortFunction)
         .transition()
@@ -425,10 +465,22 @@ function rerender(selectionIndicator) {
                 return i * 15
             })
             .duration(transitionDuration)
-            .attr("x", 2)
             .attr("y", (d, i) => {
                 const fraction = chartHeightMargin / (filteredAfricaArray.length + 1)
-                return (i + 0.9) * fraction - 1
+                return (i + 0.9) * fraction - 2
+            })            
+            .style("fill", (d, i) => colorScaleText(i)) // dynamically change color of label based on index
+            .each(function(d,i) { // dynamically change location of label if the label is longer than the bar
+                textLength = this.getComputedTextLength()
+                console.log(i)
+                d3.select(this)
+                    .attr("x", (d, i) => {
+                        console.log(i)
+                        if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
+                            return barScale(parseFloat(d.properties[currentIndicator]))
+                        } else {
+                            return 2
+                        }
+                    })
             })
-            // .text(d => cPFormat(d.properties.ISO_A2))
 }
