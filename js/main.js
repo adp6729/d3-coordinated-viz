@@ -391,6 +391,9 @@ function rerender(selectionIndicator) {
     // Change map fill and tooltip text upon indicator change
     d3.selectAll(".country")
         .transition()
+            .delay(function(d, i){
+                return i * 15
+            })
             .duration(transitionDuration)
             .style("fill", d => {
                 outColor = "#808080"
