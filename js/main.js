@@ -352,7 +352,7 @@ function createChart(africaArray) {
                                 if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
                                     return d.properties.ISO_A2
                                 }
-                            }
+                            })
                     })
 
     // add chart axis below bars
@@ -490,6 +490,6 @@ function rerender(selectionIndicator) {
                         if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
                             return d.properties.ISO_A2
                         }
-                    }
+                    })
             })
 }
