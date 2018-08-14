@@ -340,19 +340,19 @@ function createChart(africaArray) {
                     .each(function(d,i) { // dynamically change location of label if the label is longer than the bar
                         textLength = this.getComputedTextLength()
                         d3.select(this)
-                            .attr("x", (d, i) => {
-                                if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
-//                                     return barScale(parseFloat(d.properties[currentIndicator]))
-                                    return 2
-                                } else {
-                                    return 2
-                                }
-                            })
                             .text(d => {
                                 if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
                                     return d.properties.ISO_A2
                                 } else {
                                     return d.properties.NAME   
+                                }
+                            })
+                            .attr("x", (d, i) => {
+                                if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
+                                    return barScale(parseFloat(d.properties[currentIndicator]))
+//                                     return 2
+                                } else {
+                                    return 2
                                 }
                             })
                     })
@@ -481,19 +481,19 @@ function rerender(selectionIndicator) {
             .each(function(d,i) { // dynamically change location of label if the label is longer than the bar
                 textLength = this.getComputedTextLength()
                 d3.select(this)
-                    .attr("x", (d, i) => {
-                        if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
-//                             return barScale(parseFloat(d.properties[currentIndicator]))
-                            return 2
-                        } else {
-                            return 2
-                        }
-                    })
                     .text(d => {
                         if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
                             return d.properties.ISO_A2
                         } else {
                             return d.properties.NAME   
+                        }
+                    })
+                    .attr("x", (d, i) => {
+                        if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
+                            return barScale(parseFloat(d.properties[currentIndicator]))
+//                             return 2
+                        } else {
+                            return 2
                         }
                     })
             })
