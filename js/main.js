@@ -465,8 +465,10 @@ function rerender(selectionIndicator) {
     
     // call new bar scale with updated tick format based on new indicator
     d3.select(".axis")
-        .call(d3.axisBottom(barScale)
-            .tickFormat(tickFormat))
+        .transition()
+            .duration(transitionDuration)
+                .call(d3.axisBottom(barScale)
+                    .tickFormat(tickFormat))
     
     // rearrange and update all text labels associated with the bars
     d3.selectAll(".data")
