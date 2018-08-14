@@ -483,7 +483,8 @@ function rerender(selectionIndicator) {
                 d3.select(this)
                     .attr("x", (d, i) => {
                         if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
-                            return barScale(parseFloat(d.properties[currentIndicator]))
+//                             return barScale(parseFloat(d.properties[currentIndicator]))
+                            return 2
                         } else {
                             return 2
                         }
