@@ -351,6 +351,8 @@ function createChart(africaArray) {
                             .text(d => {
                                 if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
                                     return d.properties.ISO_A2
+                                } else {
+                                    return d.properties.NAME   
                                 }
                             })
                     })
@@ -489,6 +491,8 @@ function rerender(selectionIndicator) {
                     .text(d => {
                         if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
                             return d.properties.ISO_A2
+                        } else {
+                            return d.properties.NAME   
                         }
                     })
             })
