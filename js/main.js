@@ -478,10 +478,8 @@ function rerender(selectionIndicator) {
             .style("fill", (d, i) => colorScaleText(i)) // dynamically change color of label based on index
             .each(function(d,i) { // dynamically change location of label if the label is longer than the bar
                 textLength = this.getComputedTextLength()
-                console.log(i)
                 d3.select(this)
                     .attr("x", (d, i) => {
-                        console.log(i)
                         if (this.getComputedTextLength() + 2 > barScale(parseFloat(d.properties[currentIndicator]))) {
                             return barScale(parseFloat(d.properties[currentIndicator]))
                         } else {
