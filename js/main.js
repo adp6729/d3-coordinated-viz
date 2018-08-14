@@ -468,6 +468,7 @@ function rerender(selectionIndicator) {
     // rearrange and update all text labels associated with the bars
     d3.selectAll(".data")
         .sort(sortFunction)
+        .text(d => d.properties.NAME)
         .transition()
             .delay(function(d, i){
                 return i * 15
