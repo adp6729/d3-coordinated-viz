@@ -240,10 +240,10 @@ function hideToolTip(d) {
 }
 
 // create info card for indicator information and button w/ source link
-d3.select('.infocard')
-    .style('left', 20 + 'px')
-    .style('top', height/1.85 + 'px')
-    .style('width', width/2.6 + 'px')
+// d3.select('.infocard')
+//     .style('left', 20 + 'px')
+//     .style('top', height/1.85 + 'px')
+//     .style('width', width/2.6 + 'px')
 d3.select('.card .card-header')
     .text(attributeMap.get(selectionIndicator).name)
     .style('font-weight', 700)
