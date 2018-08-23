@@ -5,6 +5,20 @@
   html {
     font-size: 16px;
   }
+  
+  /* infocard styles only applied during computer use */
+  .infocard {
+    z-index: 998;
+    position: absolute;
+  }
+
+  .info {
+    font-size: 0.75em;
+  }
+
+  .sourceLink {
+    font-size: 0.9em;
+  }
 }
 
 /* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
@@ -43,26 +57,6 @@
 .map-container path.country {
   fill: gray;
   stroke: #fff;
-}
-
-.infocard {
-  z-index: 998;
-  position: absolute;
-}
-
-.info {
-  font-size: 0.75em;
-}
-
-/* future use of management of ss */
-/* @media (max-width: 1000px) {
-  .infocard {
-    width: initial; 
-  }
-} */
-
-.sourceLink {
-  font-size: 0.9em;
 }
 
 /* tooltip styles */
