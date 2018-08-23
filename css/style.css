@@ -9,7 +9,9 @@
   /* infocard styles only applied during computer use */
   .infocard {
     z-index: 998;
-    position: absolute;
+    position: absolute;    
+    top: 60vh;
+    left: 2vh;
   }
 
   .info {
