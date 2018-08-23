@@ -1,7 +1,7 @@
 /* Stylesheet by Andrew Pittman, 2018 */
 
 /* If the screen size is 601px wide or more, set the font-size of html to 100% of standard font-size */
-@media screen and (min-width: 601px) {
+@media screen and (min-width: 1200px) {
   html {
     font-size: 16px;
   }
@@ -24,10 +24,31 @@
   }
 }
 
+/* If the screen size is 601px wide or more, set the font-size of html to 100% of standard font-size */
+@media screen and (min-width: 601px) {
+  
+  /* infocard styles only applied during computer use */
+  .infocard {
+    z-index: 998;
+    position: absolute;    
+    top: 60vh;
+    left: 2vh;
+    width: 40vw;
+  }
+
+  .info {
+    font-size: 0.75em;
+  }
+
+  .sourceLink {
+    font-size: 0.9em;
+  }
+}
+
 /* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
 @media screen and (max-width: 600px) {
   html {
-    font-size: 12px;
+    font-size: 14px;
   }
   body {
     font-size: 0.8em;
